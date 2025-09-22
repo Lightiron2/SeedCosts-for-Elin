@@ -61,6 +61,8 @@ offset_right = 198.0
 offset_bottom = 14.0
 max_value = 1000.0
 value = 120.0
+rounded = true
+update_on_text_changed = true
 
 [node name="TypeMenu" type="ItemList" parent="Control"]
 layout_mode = 0
