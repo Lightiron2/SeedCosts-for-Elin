@@ -1,0 +1,155 @@
+[gd_scene load_steps=2 format=3 uid="uid://dutl8ke8db4m5"]
+
+[ext_resource type="Script" uid="uid://7nl4qdtq4apu" path="res://calc.gd" id="1_o8ei7"]
+
+[node name="calc" type="Control" node_paths=PackedStringArray("costDifLabel", "seedList", "typeList", "inputBox", "SeedNameCountList", "SeedNumCountList")]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_o8ei7")
+costDifLabel = NodePath("Control/FertilityLabel/FertilityDifference")
+seedList = NodePath("Control/SeedMenu")
+typeList = NodePath("Control/TypeMenu")
+inputBox = NodePath("Control/SpinBox")
+SeedNameCountList = NodePath("Control/SeedNameCountList")
+SeedNumCountList = NodePath("Control/SeedNumCountList")
+
+[node name="Control" type="Control" parent="."]
+anchors_preset = 0
+offset_left = -113.0
+offset_right = -113.0
+
+[node name="FertilityLabel" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = -97.0
+offset_top = -124.0
+offset_right = -33.0
+offset_bottom = -101.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Fertility:"
+
+[node name="FertilityDifference" type="Label" parent="Control/FertilityLabel"]
+layout_mode = 0
+offset_left = 66.0
+offset_top = 10.0
+offset_right = 187.0
+offset_bottom = 33.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Current fertility"
+
+[node name="Land" type="Label" parent="Control/FertilityLabel"]
+layout_mode = 0
+offset_left = 66.0
+offset_top = -10.0
+offset_right = 168.0
+offset_bottom = 13.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Land:"
+
+[node name="maxFertility" type="SpinBox" parent="Control/FertilityLabel"]
+layout_mode = 0
+offset_left = 111.0
+offset_top = -17.0
+offset_right = 198.0
+offset_bottom = 14.0
+max_value = 1000.0
+value = 120.0
+
+[node name="TypeMenu" type="ItemList" parent="Control"]
+layout_mode = 0
+offset_left = -205.0
+offset_top = -139.0
+offset_right = -100.0
+offset_bottom = 139.0
+theme_override_colors/font_selected_color = Color(1, 1, 1, 1)
+auto_width = true
+auto_height = true
+item_count = 10
+item_0/text = "Flowers"
+item_1/text = "Fruits"
+item_2/text = "Grass"
+item_3/text = "Herbs"
+item_4/text = "Mushrooms"
+item_5/text = "Nuts"
+item_6/text = "Pastures"
+item_7/text = "Straws"
+item_8/text = "Trees"
+item_9/text = "Vegetables"
+
+[node name="SeedMenu" type="ItemList" parent="Control"]
+layout_mode = 2
+offset_left = -99.0
+offset_top = -46.0
+offset_right = 89.0
+offset_bottom = -11.0
+auto_width = true
+auto_height = true
+max_columns = 3
+fixed_column_width = 100
+
+[node name="SpinBox" type="SpinBox" parent="Control"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = -82.0
+offset_right = 100.563
+offset_bottom = -51.0
+max_value = 10000.0
+rounded = true
+alignment = 2
+update_on_text_changed = true
+
+[node name="ResetSafety" type="ItemList" parent="Control"]
+layout_mode = 0
+offset_left = -20.0
+offset_top = 77.0
+offset_right = 101.0
+offset_bottom = 139.0
+select_mode = 2
+auto_width = true
+auto_height = true
+item_count = 2
+item_0/text = "Reset Safety 1"
+item_1/text = "Reset Safety 2"
+
+[node name="Reset" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 108.0
+offset_right = 171.0
+offset_bottom = 139.0
+text = "Reset"
+
+[node name="SeedNameCountList" type="ItemList" parent="Control"]
+layout_mode = 0
+offset_left = 222.0
+offset_top = -46.0
+offset_right = 262.0
+offset_bottom = -6.0
+auto_width = true
+auto_height = true
+
+[node name="SeedNumCountList" type="ItemList" parent="Control"]
+layout_mode = 0
+offset_left = 359.0
+offset_top = -46.0
+offset_right = 399.0
+offset_bottom = -6.0
+auto_width = true
+auto_height = true
+item_count = 1
+item_0/text = "10000.0"
+
+[connection signal="value_changed" from="Control/FertilityLabel/maxFertility" to="." method="_on_max_fertility_value_changed"]
+[connection signal="item_selected" from="Control/TypeMenu" to="." method="_on_seed_type_selected"]
+[connection signal="item_selected" from="Control/SeedMenu" to="." method="_on_seed_selected"]
+[connection signal="value_changed" from="Control/SpinBox" to="." method="_on_spin_box_value_changed"]
+[connection signal="item_clicked" from="Control/ResetSafety" to="." method="_on_reset_safety_item_clicked"]
+[connection signal="button_up" from="Control/Reset" to="." method="_on_reset_button_up"]
+[connection signal="item_selected" from="Control/SeedNumCountList" to="." method="_on_seed_num_count_list_item_selected"]
