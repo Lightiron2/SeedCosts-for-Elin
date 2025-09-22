@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://7nl4qdtq4apu" path="res://calc.gd" id="1_o8ei7"]
 
-[node name="calc" type="Control" node_paths=PackedStringArray("costDifLabel", "seedList", "typeList", "inputBox", "SeedNameCountList", "SeedNumCountList")]
+[node name="calc" type="Control" node_paths=PackedStringArray("fertilityDifferenceLabel", "SeedNameCountList", "SeedNumCountList", "inputBox", "seedList", "typeList")]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -14,12 +14,12 @@ grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("1_o8ei7")
-costDifLabel = NodePath("Control/FertilityLabel/FertilityDifference")
-seedList = NodePath("Control/SeedMenu")
-typeList = NodePath("Control/TypeMenu")
-inputBox = NodePath("Control/SpinBox")
+fertilityDifferenceLabel = NodePath("Control/FertilityLabel/FertilityDifference")
 SeedNameCountList = NodePath("Control/SeedNameCountList")
 SeedNumCountList = NodePath("Control/SeedNumCountList")
+inputBox = NodePath("Control/numInput")
+seedList = NodePath("Control/SeedMenu")
+typeList = NodePath("Control/TypeMenu")
 
 [node name="Control" type="Control" parent="."]
 anchors_preset = 0
@@ -29,9 +29,9 @@ offset_right = -113.0
 [node name="FertilityLabel" type="Label" parent="Control"]
 layout_mode = 0
 offset_left = -97.0
-offset_top = -124.0
+offset_top = -152.0
 offset_right = -33.0
-offset_bottom = -101.0
+offset_bottom = -129.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Fertility:"
 
@@ -65,52 +65,61 @@ value = 120.0
 [node name="TypeMenu" type="ItemList" parent="Control"]
 layout_mode = 0
 offset_left = -205.0
-offset_top = -139.0
-offset_right = -100.0
-offset_bottom = 139.0
+offset_top = -166.0
+offset_right = -99.0
+offset_bottom = 166.0
 theme_override_colors/font_selected_color = Color(1, 1, 1, 1)
 auto_width = true
 auto_height = true
-item_count = 10
-item_0/text = "Flowers"
-item_1/text = "Fruits"
-item_2/text = "Grass"
-item_3/text = "Herbs"
-item_4/text = "Mushrooms"
-item_5/text = "Nuts"
-item_6/text = "Pastures"
-item_7/text = "Straws"
-item_8/text = "Trees"
-item_9/text = "Vegetables"
+item_count = 12
+item_0/text = "Fibers"
+item_1/text = "Flowers"
+item_2/text = "Fruits"
+item_3/text = "Grass"
+item_4/text = "Herbs"
+item_5/text = "Mushrooms"
+item_6/text = "Nuts"
+item_7/text = "Pastures"
+item_8/text = "Straws"
+item_9/text = "Trees"
+item_10/text = "Vegetables"
+item_11/text = "Ornamental"
 
 [node name="SeedMenu" type="ItemList" parent="Control"]
 layout_mode = 2
 offset_left = -99.0
-offset_top = -46.0
+offset_top = -73.0
 offset_right = 89.0
-offset_bottom = -11.0
+offset_bottom = -38.0
 auto_width = true
 auto_height = true
 max_columns = 3
 fixed_column_width = 100
 
-[node name="SpinBox" type="SpinBox" parent="Control"]
+[node name="numInput" type="SpinBox" parent="Control"]
 layout_mode = 0
 offset_left = 14.0
-offset_top = -82.0
+offset_top = -109.0
 offset_right = 100.563
-offset_bottom = -51.0
+offset_bottom = -78.0
 max_value = 10000.0
 rounded = true
 alignment = 2
 update_on_text_changed = true
 
+[node name="NumberBoxLabel" type="Label" parent="Control/numInput"]
+layout_mode = 0
+offset_left = -112.0
+offset_bottom = 23.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Number Box->"
+
 [node name="ResetSafety" type="ItemList" parent="Control"]
 layout_mode = 0
 offset_left = -20.0
-offset_top = 77.0
+offset_top = 104.0
 offset_right = 101.0
-offset_bottom = 139.0
+offset_bottom = 166.0
 select_mode = 2
 auto_width = true
 auto_height = true
@@ -121,35 +130,53 @@ item_1/text = "Reset Safety 2"
 [node name="Reset" type="Button" parent="Control"]
 layout_mode = 0
 offset_left = 120.0
-offset_top = 108.0
+offset_top = 135.0
 offset_right = 171.0
-offset_bottom = 139.0
+offset_bottom = 166.0
 text = "Reset"
 
 [node name="SeedNameCountList" type="ItemList" parent="Control"]
 layout_mode = 0
 offset_left = 222.0
-offset_top = -46.0
+offset_top = -166.0
 offset_right = 262.0
-offset_bottom = -6.0
+offset_bottom = -126.0
 auto_width = true
 auto_height = true
 
 [node name="SeedNumCountList" type="ItemList" parent="Control"]
 layout_mode = 0
 offset_left = 359.0
-offset_top = -46.0
-offset_right = 399.0
-offset_bottom = -6.0
+offset_top = -166.0
+offset_right = 431.0
+offset_bottom = -126.0
 auto_width = true
 auto_height = true
 item_count = 1
 item_0/text = "10000.0"
 
+[node name="CurrentSeedLabel" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 188.0
+offset_top = -189.0
+offset_right = 299.0
+offset_bottom = -166.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Current Seeds"
+
+[node name="CurrentAmountLabel" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 330.0
+offset_top = -189.0
+offset_right = 457.0
+offset_bottom = -166.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Current Amount"
+
 [connection signal="value_changed" from="Control/FertilityLabel/maxFertility" to="." method="_on_max_fertility_value_changed"]
 [connection signal="item_selected" from="Control/TypeMenu" to="." method="_on_seed_type_selected"]
 [connection signal="item_selected" from="Control/SeedMenu" to="." method="_on_seed_selected"]
-[connection signal="value_changed" from="Control/SpinBox" to="." method="_on_spin_box_value_changed"]
+[connection signal="value_changed" from="Control/numInput" to="." method="_on_spin_box_value_changed"]
 [connection signal="item_clicked" from="Control/ResetSafety" to="." method="_on_reset_safety_item_clicked"]
 [connection signal="button_up" from="Control/Reset" to="." method="_on_reset_button_up"]
 [connection signal="item_selected" from="Control/SeedNumCountList" to="." method="_on_seed_num_count_list_item_selected"]
