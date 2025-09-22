@@ -141,7 +141,7 @@ func _on_spin_box_value_changed(value: float) -> void:
 		return
 	calcFertCost(typeNumber,nameTarget,value)
 
-func _on_reset_safety_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
+func _on_reset_safety_item_clicked(index: int, _at_position: Vector2, _mouse_button_index: int) -> void:
 	if index == 0:
 		resetSafetyOne = !resetSafetyOne
 	if index == 1:

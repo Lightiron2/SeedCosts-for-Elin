@@ -19,8 +19,11 @@ config/icon="res://icon.svg"
 
 window/size/viewport_width=720
 window/size/viewport_height=576
+window/energy_saving/keep_screen_on=false
 
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+environment/ssao/quality=1
+environment/ssil/quality=1
