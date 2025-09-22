@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dcs2tynco1jxy"
-path="res://.godot/imported/ElinFertCalc.png-080f5124f6ded7317dd4c11971ef33be.ctex"
+uid="uid://2y6owx4cx3ix"
+path="res://.godot/imported/index.icon.png-b92c9a802ad4b78e247784454a6b506f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://docs/ElinFertCalc.png"
-dest_files=["res://.godot/imported/ElinFertCalc.png-080f5124f6ded7317dd4c11971ef33be.ctex"]
+source_file="res://docs/index.icon.png"
+dest_files=["res://.godot/imported/index.icon.png-b92c9a802ad4b78e247784454a6b506f.ctex"]
 
 [params]
 
