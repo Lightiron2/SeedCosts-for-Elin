@@ -61,8 +61,9 @@ var cPastures: float = 0.0
 var cStraws: float = 0.0
 var cTrees: float = 0.0
 var cVegetables: float = 0.0
+var cOrnamentals: float = 0.0
 var curCostArray: Array[float] = [cFlowers,cFruits,cGrass,cHerbs,cMushrooms,cNuts,
-	cPastures,cStraws,cTrees,cVegetables]
+	cOrnamentals,cPastures,cStraws,cTrees,cVegetables]
 
 @export var fertilityDifferenceLabel: Label
 @export var SeedNameCountList: ItemList

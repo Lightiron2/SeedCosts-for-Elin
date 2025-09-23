@@ -24,19 +24,15 @@ typeList = NodePath("Control/TypeMenu")
 
 [node name="Control" type="Control" parent="."]
 anchors_preset = 0
-offset_left = -113.0
-offset_right = -113.0
 
 [node name="Control" type="Control" parent="Control"]
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
 
 [node name="FertilityLabel" type="Label" parent="Control/Control"]
 layout_mode = 0
-offset_left = -97.0
+offset_left = -207.0
 offset_top = -152.0
-offset_right = -33.0
+offset_right = -143.0
 offset_bottom = -129.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Fertility:"
@@ -61,9 +57,9 @@ text = "Land:"
 
 [node name="maxFertility" type="SpinBox" parent="Control/Control"]
 layout_mode = 0
-offset_left = 14.0
+offset_left = -96.0
 offset_top = -169.0
-offset_right = 101.0
+offset_right = -9.0
 offset_bottom = -138.0
 max_value = 10000.0
 value = 120.0
@@ -72,9 +68,9 @@ update_on_text_changed = true
 
 [node name="TypeMenu" type="ItemList" parent="Control"]
 layout_mode = 0
-offset_left = -205.0
+offset_left = -316.0
 offset_top = -166.0
-offset_right = -99.0
+offset_right = -210.0
 offset_bottom = 166.0
 theme_override_colors/font_selected_color = Color(1, 1, 1, 1)
 auto_width = true
@@ -87,17 +83,17 @@ item_3/text = "Grass"
 item_4/text = "Herbs"
 item_5/text = "Mushrooms"
 item_6/text = "Nuts"
-item_7/text = "Pastures"
-item_8/text = "Straws"
-item_9/text = "Trees"
-item_10/text = "Vegetables"
-item_11/text = "Ornamental"
+item_7/text = "Ornamental"
+item_8/text = "Pastures"
+item_9/text = "Straws"
+item_10/text = "Trees"
+item_11/text = "Vegetables"
 
 [node name="SeedMenu" type="ItemList" parent="Control"]
 layout_mode = 2
-offset_left = -98.0
+offset_left = -208.0
 offset_top = -73.0
-offset_right = 90.0
+offset_right = -20.0
 offset_bottom = -38.0
 auto_width = true
 auto_height = true
@@ -106,9 +102,9 @@ fixed_column_width = 100
 
 [node name="numInput" type="SpinBox" parent="Control"]
 layout_mode = 0
-offset_left = 14.0
+offset_left = -96.0
 offset_top = -109.0
-offset_right = 100.563
+offset_right = -9.437
 offset_bottom = -78.0
 max_value = 10000.0
 rounded = true
@@ -124,9 +120,9 @@ text = "Number Box->"
 
 [node name="ResetSafety" type="ItemList" parent="Control"]
 layout_mode = 0
-offset_left = -20.0
+offset_left = -130.0
 offset_top = 104.0
-offset_right = 101.0
+offset_right = -9.0
 offset_bottom = 166.0
 select_mode = 2
 auto_width = true
@@ -137,26 +133,26 @@ item_1/text = "Reset Safety 2"
 
 [node name="Reset" type="Button" parent="Control"]
 layout_mode = 0
-offset_left = 120.0
+offset_left = 10.0
 offset_top = 135.0
-offset_right = 171.0
+offset_right = 61.0
 offset_bottom = 166.0
 text = "Reset"
 
 [node name="SeedNameCountList" type="ItemList" parent="Control"]
 layout_mode = 0
-offset_left = 222.0
+offset_left = 113.0
 offset_top = -166.0
-offset_right = 262.0
+offset_right = 153.0
 offset_bottom = -126.0
 auto_width = true
 auto_height = true
 
 [node name="SeedNumCountList" type="ItemList" parent="Control"]
 layout_mode = 0
-offset_left = 359.0
+offset_left = 250.0
 offset_top = -166.0
-offset_right = 431.0
+offset_right = 322.0
 offset_bottom = -126.0
 auto_width = true
 auto_height = true
@@ -165,18 +161,18 @@ item_0/text = "10000.0"
 
 [node name="CurrentSeedLabel" type="Label" parent="Control"]
 layout_mode = 0
-offset_left = 188.0
+offset_left = 79.0
 offset_top = -189.0
-offset_right = 299.0
+offset_right = 190.0
 offset_bottom = -166.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Current Seeds"
 
 [node name="CurrentAmountLabel" type="Label" parent="Control"]
 layout_mode = 0
-offset_left = 330.0
+offset_left = 221.0
 offset_top = -189.0
-offset_right = 457.0
+offset_right = 348.0
 offset_bottom = -166.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Current Amount"
@@ -187,7 +183,7 @@ offset_left = -316.0
 offset_top = -196.0
 offset_right = -276.0
 offset_bottom = -173.0
-text = "Placeholder"
+text = "Version: Placeholder"
 
 [connection signal="value_changed" from="Control/Control/maxFertility" to="." method="_on_max_fertility_value_changed"]
 [connection signal="item_selected" from="Control/TypeMenu" to="." method="_on_seed_type_selected"]
