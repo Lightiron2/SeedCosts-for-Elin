@@ -14,48 +14,68 @@ grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("1_o8ei7")
-versionLabel = NodePath("Version Label")
-fertilityDifferenceLabel = NodePath("Control/Control/FertilityLabel/FertilityDifference")
-SeedNameCountList = NodePath("Control/SeedNameCountList")
-SeedNumCountList = NodePath("Control/SeedNumCountList")
+versionLabel = NodePath("Control/Labels/Version Label")
+fertilityDifferenceLabel = NodePath("Control/maxFertility/FertilityDifference")
+SeedNameCountList = NodePath("Control/Lists/SeedNameCountList")
+SeedNumCountList = NodePath("Control/Lists/SeedNumCountList")
 inputBox = NodePath("Control/numInput")
-seedList = NodePath("Control/SeedMenu")
-typeList = NodePath("Control/TypeMenu")
+seedList = NodePath("Control/Lists/SeedMenu")
+typeList = NodePath("Control/Lists/TypeMenu")
 
 [node name="Control" type="Control" parent="."]
 anchors_preset = 0
 
-[node name="Control" type="Control" parent="Control"]
+[node name="Labels" type="Control" parent="Control"]
 anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
-[node name="FertilityLabel" type="Label" parent="Control/Control"]
+[node name="CurrentSeedLabel" type="Label" parent="Control/Labels"]
 layout_mode = 0
-offset_left = -207.0
-offset_top = -152.0
-offset_right = -143.0
-offset_bottom = -129.0
+offset_left = 79.0
+offset_top = -189.0
+offset_right = 190.0
+offset_bottom = -166.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Fertility:"
+text = "Current Seeds"
 
-[node name="FertilityDifference" type="Label" parent="Control/Control/FertilityLabel"]
+[node name="CurrentAmountLabel" type="Label" parent="Control/Labels"]
 layout_mode = 0
-offset_left = 66.0
-offset_top = 10.0
-offset_right = 187.0
-offset_bottom = 33.0
+offset_left = 221.0
+offset_top = -189.0
+offset_right = 348.0
+offset_bottom = -166.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Current fertility"
+text = "Current Amount"
 
-[node name="Land" type="Label" parent="Control/Control/FertilityLabel"]
+[node name="Version Label" type="Label" parent="Control/Labels"]
 layout_mode = 0
-offset_left = 66.0
-offset_top = -10.0
-offset_right = 168.0
-offset_bottom = 13.0
+offset_left = -316.0
+offset_top = -196.0
+offset_right = -157.0
+offset_bottom = -173.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Land:"
+text = "Version: Placeholder"
 
-[node name="maxFertility" type="SpinBox" parent="Control/Control"]
+[node name="numInput" type="SpinBox" parent="Control"]
+layout_mode = 0
+offset_left = -96.0
+offset_top = -109.0
+offset_right = -9.437
+offset_bottom = -78.0
+max_value = 10000.0
+rounded = true
+alignment = 2
+update_on_text_changed = true
+
+[node name="NumberBoxLabel" type="Label" parent="Control/numInput"]
+layout_mode = 0
+offset_left = -112.0
+offset_bottom = 23.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Number Box->"
+
+[node name="maxFertility" type="SpinBox" parent="Control"]
 layout_mode = 0
 offset_left = -96.0
 offset_top = -169.0
@@ -66,7 +86,59 @@ value = 120.0
 rounded = true
 update_on_text_changed = true
 
-[node name="TypeMenu" type="ItemList" parent="Control"]
+[node name="FertilityDifference" type="Label" parent="Control/maxFertility"]
+layout_mode = 0
+offset_left = -45.0
+offset_top = 27.0
+offset_right = 76.0
+offset_bottom = 50.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Current fertility"
+
+[node name="Land" type="Label" parent="Control/maxFertility"]
+layout_mode = 0
+offset_left = -45.0
+offset_top = 7.0
+offset_right = 57.0
+offset_bottom = 30.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Land:"
+
+[node name="FertilityLabel" type="Label" parent="Control/maxFertility"]
+layout_mode = 0
+offset_left = -111.0
+offset_top = 17.0
+offset_right = -47.0
+offset_bottom = 40.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Fertility:"
+
+[node name="Lists" type="Control" parent="Control"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="SeedNameCountList" type="ItemList" parent="Control/Lists"]
+layout_mode = 0
+offset_left = 113.0
+offset_top = -166.0
+offset_right = 153.0
+offset_bottom = -126.0
+auto_width = true
+auto_height = true
+
+[node name="SeedNumCountList" type="ItemList" parent="Control/Lists"]
+layout_mode = 0
+offset_left = 250.0
+offset_top = -166.0
+offset_right = 322.0
+offset_bottom = -126.0
+auto_width = true
+auto_height = true
+item_count = 1
+item_0/text = "10000.0"
+
+[node name="TypeMenu" type="ItemList" parent="Control/Lists"]
 layout_mode = 0
 offset_left = -316.0
 offset_top = -166.0
@@ -89,7 +161,7 @@ item_9/text = "Straws"
 item_10/text = "Trees"
 item_11/text = "Vegetables"
 
-[node name="SeedMenu" type="ItemList" parent="Control"]
+[node name="SeedMenu" type="ItemList" parent="Control/Lists"]
 layout_mode = 2
 offset_left = -208.0
 offset_top = -73.0
@@ -100,25 +172,12 @@ auto_height = true
 max_columns = 3
 fixed_column_width = 100
 
-[node name="numInput" type="SpinBox" parent="Control"]
-layout_mode = 0
-offset_left = -96.0
-offset_top = -109.0
-offset_right = -9.437
-offset_bottom = -78.0
-max_value = 10000.0
-rounded = true
-alignment = 2
-update_on_text_changed = true
+[node name="ResetNodes" type="Control" parent="Control"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
-[node name="NumberBoxLabel" type="Label" parent="Control/numInput"]
-layout_mode = 0
-offset_left = -112.0
-offset_bottom = 23.0
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Number Box->"
-
-[node name="ResetSafety" type="ItemList" parent="Control"]
+[node name="ResetSafety" type="ItemList" parent="Control/ResetNodes"]
 layout_mode = 0
 offset_left = -130.0
 offset_top = 104.0
@@ -131,7 +190,7 @@ item_count = 2
 item_0/text = "Reset Safety 1"
 item_1/text = "Reset Safety 2"
 
-[node name="Reset" type="Button" parent="Control"]
+[node name="Reset" type="Button" parent="Control/ResetNodes"]
 layout_mode = 0
 offset_left = 10.0
 offset_top = 135.0
@@ -139,56 +198,10 @@ offset_right = 61.0
 offset_bottom = 166.0
 text = "Reset"
 
-[node name="SeedNameCountList" type="ItemList" parent="Control"]
-layout_mode = 0
-offset_left = 113.0
-offset_top = -166.0
-offset_right = 153.0
-offset_bottom = -126.0
-auto_width = true
-auto_height = true
-
-[node name="SeedNumCountList" type="ItemList" parent="Control"]
-layout_mode = 0
-offset_left = 250.0
-offset_top = -166.0
-offset_right = 322.0
-offset_bottom = -126.0
-auto_width = true
-auto_height = true
-item_count = 1
-item_0/text = "10000.0"
-
-[node name="CurrentSeedLabel" type="Label" parent="Control"]
-layout_mode = 0
-offset_left = 79.0
-offset_top = -189.0
-offset_right = 190.0
-offset_bottom = -166.0
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Current Seeds"
-
-[node name="CurrentAmountLabel" type="Label" parent="Control"]
-layout_mode = 0
-offset_left = 221.0
-offset_top = -189.0
-offset_right = 348.0
-offset_bottom = -166.0
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Current Amount"
-
-[node name="Version Label" type="Label" parent="."]
-layout_mode = 0
-offset_left = -316.0
-offset_top = -196.0
-offset_right = -276.0
-offset_bottom = -173.0
-text = "Version: Placeholder"
-
-[connection signal="value_changed" from="Control/Control/maxFertility" to="." method="_on_max_fertility_value_changed"]
-[connection signal="item_selected" from="Control/TypeMenu" to="." method="_on_seed_type_selected"]
-[connection signal="item_selected" from="Control/SeedMenu" to="." method="_on_seed_selected"]
 [connection signal="value_changed" from="Control/numInput" to="." method="_on_spin_box_value_changed"]
-[connection signal="item_clicked" from="Control/ResetSafety" to="." method="_on_reset_safety_item_clicked"]
-[connection signal="button_up" from="Control/Reset" to="." method="_on_reset_button_up"]
-[connection signal="item_selected" from="Control/SeedNumCountList" to="." method="_on_seed_num_count_list_item_selected"]
+[connection signal="value_changed" from="Control/maxFertility" to="." method="_on_max_fertility_value_changed"]
+[connection signal="item_selected" from="Control/Lists/SeedNumCountList" to="." method="_on_seed_num_count_list_item_selected"]
+[connection signal="item_selected" from="Control/Lists/TypeMenu" to="." method="_on_seed_type_selected"]
+[connection signal="item_selected" from="Control/Lists/SeedMenu" to="." method="_on_seed_selected"]
+[connection signal="item_clicked" from="Control/ResetNodes/ResetSafety" to="." method="_on_reset_safety_item_clicked"]
+[connection signal="button_up" from="Control/ResetNodes/Reset" to="." method="_on_reset_button_up"]
