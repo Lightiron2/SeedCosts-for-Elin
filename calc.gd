@@ -1,6 +1,6 @@
 extends Control
 
-var version: String = "Version: Something"
+var version: String = "Version: Something 0.00"
 @export var versionLabel: Label
 
 
