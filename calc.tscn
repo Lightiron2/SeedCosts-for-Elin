@@ -13,9 +13,8 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-mouse_filter = 1
 script = ExtResource("1_o8ei7")
-fertilityDifferenceLabel = NodePath("Control/FertilityLabel/FertilityDifference")
+fertilityDifferenceLabel = NodePath("Control/Control/FertilityLabel/FertilityDifference")
 SeedNameCountList = NodePath("Control/SeedNameCountList")
 SeedNumCountList = NodePath("Control/SeedNumCountList")
 inputBox = NodePath("Control/numInput")
@@ -26,9 +25,13 @@ typeList = NodePath("Control/TypeMenu")
 anchors_preset = 0
 offset_left = -113.0
 offset_right = -113.0
-mouse_filter = 1
 
-[node name="FertilityLabel" type="Label" parent="Control"]
+[node name="Control" type="Control" parent="Control"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="FertilityLabel" type="Label" parent="Control/Control"]
 layout_mode = 0
 offset_left = -97.0
 offset_top = -152.0
@@ -37,7 +40,7 @@ offset_bottom = -129.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Fertility:"
 
-[node name="FertilityDifference" type="Label" parent="Control/FertilityLabel"]
+[node name="FertilityDifference" type="Label" parent="Control/Control/FertilityLabel"]
 layout_mode = 0
 offset_left = 66.0
 offset_top = 10.0
@@ -46,7 +49,7 @@ offset_bottom = 33.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Current fertility"
 
-[node name="Land" type="Label" parent="Control/FertilityLabel"]
+[node name="Land" type="Label" parent="Control/Control/FertilityLabel"]
 layout_mode = 0
 offset_left = 66.0
 offset_top = -10.0
@@ -55,13 +58,13 @@ offset_bottom = 13.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Land:"
 
-[node name="maxFertility" type="SpinBox" parent="Control/FertilityLabel"]
+[node name="maxFertility" type="SpinBox" parent="Control/Control"]
 layout_mode = 0
-offset_left = 111.0
-offset_top = -17.0
-offset_right = 198.0
-offset_bottom = 14.0
-max_value = 1000.0
+offset_left = 14.0
+offset_top = -169.0
+offset_right = 101.0
+offset_bottom = -138.0
+max_value = 10000.0
 value = 120.0
 rounded = true
 update_on_text_changed = true
@@ -177,7 +180,7 @@ offset_bottom = -166.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Current Amount"
 
-[connection signal="value_changed" from="Control/FertilityLabel/maxFertility" to="." method="_on_max_fertility_value_changed"]
+[connection signal="value_changed" from="Control/Control/maxFertility" to="." method="_on_max_fertility_value_changed"]
 [connection signal="item_selected" from="Control/TypeMenu" to="." method="_on_seed_type_selected"]
 [connection signal="item_selected" from="Control/SeedMenu" to="." method="_on_seed_selected"]
 [connection signal="value_changed" from="Control/numInput" to="." method="_on_spin_box_value_changed"]
