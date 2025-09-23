@@ -13,6 +13,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+mouse_filter = 1
 script = ExtResource("1_o8ei7")
 fertilityDifferenceLabel = NodePath("Control/FertilityLabel/FertilityDifference")
 SeedNameCountList = NodePath("Control/SeedNameCountList")
@@ -25,6 +26,7 @@ typeList = NodePath("Control/TypeMenu")
 anchors_preset = 0
 offset_left = -113.0
 offset_right = -113.0
+mouse_filter = 1
 
 [node name="FertilityLabel" type="Label" parent="Control"]
 layout_mode = 0
@@ -89,9 +91,9 @@ item_11/text = "Ornamental"
 
 [node name="SeedMenu" type="ItemList" parent="Control"]
 layout_mode = 2
-offset_left = -99.0
+offset_left = -98.0
 offset_top = -73.0
-offset_right = 89.0
+offset_right = 90.0
 offset_bottom = -38.0
 auto_width = true
 auto_height = true
