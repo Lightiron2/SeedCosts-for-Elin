@@ -22,6 +22,8 @@ const Vegetable: Dictionary = {"Bamboo" = 1.0,"Cabbage" = 4.0,"Cabocchi" = 4.0,"
 
 const seedCostArray: Array[Dictionary] = [Fiber,Flowers,Fruit,Grass,Herb,Mushroom,Nuts,Ornamental,
 	Pasture,Straw,Trees,Vegetable,]
+const seedTypeNameArray: Array[String] = ["Fiber","Flowers","Fruit","Grass","Herb","Mushroom","Nuts","Ornamental",
+	"Pasture","Straw","Trees","Vegetable",]
 
 var FiberChosen: Dictionary = {"Cotton" = 0.0}
 var FlowersChosen: Dictionary = {"Normal" = 0.0,"Blue" = 0.0,"White" = 0.0,"Yellow" = 0.0}
@@ -86,6 +88,9 @@ var curCostReset: Array = []
 var mutableReset: Array = []
 
 func _ready() -> void:
+	typeList.clear()
+	for i in seedTypeNameArray:
+		typeList.add_item(i,null,true)
 	versionLabel.text = version
 	SeedNumCountList.clear()
 	curCostReset = curCostArray
