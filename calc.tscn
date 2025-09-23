@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://7nl4qdtq4apu" path="res://calc.gd" id="1_o8ei7"]
 
-[node name="calc" type="Control" node_paths=PackedStringArray("fertilityDifferenceLabel", "SeedNameCountList", "SeedNumCountList", "inputBox", "seedList", "typeList")]
+[node name="calc" type="Control" node_paths=PackedStringArray("versionLabel", "fertilityDifferenceLabel", "SeedNameCountList", "SeedNumCountList", "inputBox", "seedList", "typeList")]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -14,6 +14,7 @@ grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("1_o8ei7")
+versionLabel = NodePath("Version Label")
 fertilityDifferenceLabel = NodePath("Control/Control/FertilityLabel/FertilityDifference")
 SeedNameCountList = NodePath("Control/SeedNameCountList")
 SeedNumCountList = NodePath("Control/SeedNumCountList")
@@ -179,6 +180,14 @@ offset_right = 457.0
 offset_bottom = -166.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Current Amount"
+
+[node name="Version Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = -316.0
+offset_top = -196.0
+offset_right = -276.0
+offset_bottom = -173.0
+text = "Placeholder"
 
 [connection signal="value_changed" from="Control/Control/maxFertility" to="." method="_on_max_fertility_value_changed"]
 [connection signal="item_selected" from="Control/TypeMenu" to="." method="_on_seed_type_selected"]
