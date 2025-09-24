@@ -74,8 +74,8 @@ var preventTriggerOnSeedOrTypeChange: bool = false
 var resetSafetyOne: bool = false
 var resetSafetyTwo: bool = false
 
-@export var seedList: ItemList
-@export var typeList: ItemList
+@export var seedMenu: ItemList
+@export var typeMenu: ItemList
 var typeNumber: int = 0
 
 var nameTarget: String = "No Target"
@@ -97,9 +97,9 @@ func _ready() -> void:
 		print(seedTypeNameArray.size(),": seedTypeNameArray Size")
 		print(mutableDicsArray.size(),": mutableDicsArray Size")
 		print(curCostArray.size(),": curCostArray Size")
-	typeList.clear()
+	typeMenu.clear()
 	for i in seedTypeNameArray:
-		typeList.add_item(i,null,true)
+		typeMenu.add_item(i,null,true)
 	versionLabel.text = versionName
 	SeedNumCountList.clear()
 	updateFertilityLabels()
@@ -133,7 +133,7 @@ func updateFertilityLabels():
 
 func _on_seed_selected(index: int) -> void:
 	SeedNumCountList.deselect_all()
-	nameTarget = seedList.get_item_text(index)
+	nameTarget = seedMenu.get_item_text(index)
 	if inputBox.value > 0:
 		preventTriggerOnSeedOrTypeChange = true
 		inputBox.value = 0
@@ -144,11 +144,11 @@ func _on_seed_type_selected(index: int) -> void:
 		inputBox.value = 0
 	typeNumber = index
 	nameTarget = "No Target"
-	if typeList.item_count > 0:
-		seedList.clear()
+	if typeMenu.item_count > 0:
+		seedMenu.clear()
 	var typeDic: Dictionary = seedCostArray[index]
 	for key in typeDic:
-		seedList.add_item(key,null,true)
+		seedMenu.add_item(key,null,true)
 var resetting:bool = false
 func _on_spin_box_value_changed(value: float) -> void:
 	if resetting:
@@ -173,7 +173,7 @@ func _on_reset_button_up() -> void:
 		SeedNumCountList.clear()
 		seedCountTypeArray.clear()
 		SeedNumCountList.deselect_all()
-		seedList.deselect_all()
+		seedMenu.deselect_all()
 		for dic in mutableDicsArray:
 			for key in dic:
 				dic[key] = 0.0
@@ -211,7 +211,7 @@ func addToCountList(seedName:String,seedCount: float, arrayId: int):
 	seedCountTypeArray.append(arrayId)
 
 func _on_seed_num_count_list_item_selected(index: int) -> void:
-	seedList.deselect_all()
+	seedMenu.deselect_all()
 	var seedName: String = SeedNameCountList.get_item_text(index)
 	nameTarget = seedName
 	if inputBox.value > 0:

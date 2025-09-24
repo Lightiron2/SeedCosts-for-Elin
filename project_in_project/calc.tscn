@@ -1,8 +1,8 @@
 [gd_scene load_steps=2 format=3 uid="uid://dutl8ke8db4m5"]
 
-[ext_resource type="Script" uid="uid://7nl4qdtq4apu" path="res://calc.gd" id="1_o8ei7"]
+[ext_resource type="Script" uid="uid://7nl4qdtq4apu" path="res://project_in_project/calc.gd" id="1_o8ei7"]
 
-[node name="calc" type="Control" node_paths=PackedStringArray("versionLabel", "fertilityDifferenceLabel", "SeedNameCountList", "SeedNumCountList", "inputBox", "seedList", "typeList")]
+[node name="calc" type="Control" node_paths=PackedStringArray("versionLabel", "fertilityDifferenceLabel", "SeedNameCountList", "SeedNumCountList", "inputBox", "seedMenu", "typeMenu")]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -19,8 +19,8 @@ fertilityDifferenceLabel = NodePath("Control/maxFertility/FertilityDifference")
 SeedNameCountList = NodePath("Control/Lists/SeedNameCountList")
 SeedNumCountList = NodePath("Control/Lists/SeedNumCountList")
 inputBox = NodePath("Control/numInput")
-seedList = NodePath("Control/Lists/SeedMenu")
-typeList = NodePath("Control/Lists/TypeMenu")
+seedMenu = NodePath("Control/Lists/SeedMenu")
+typeMenu = NodePath("Control/Lists/TypeMenu")
 
 [node name="Control" type="Control" parent="."]
 anchors_preset = 0

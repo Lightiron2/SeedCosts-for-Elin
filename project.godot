@@ -14,7 +14,7 @@ config/name="ElinFertCalc"
 run/main_scene="uid://dutl8ke8db4m5"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 run/max_fps=60
-config/icon="res://icon.svg"
+config/icon="res://project_in_project/icon.svg"
 
 [display]
 
