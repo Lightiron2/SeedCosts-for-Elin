@@ -1,10 +1,11 @@
 extends Control
 
-var version: String = "Version: Something 0.00"
+var versionName: String = "Version: Something 0.00"
+var version: float = 0.001
 @export var versionLabel: Label
 
 
-const Fiber: Dictionary = {"Cotton" = 0.0}
+const Fiber: Dictionary = {"Cotton" = 2.0}
 const Flowers: Dictionary = {"Normal" = 1.0,"Blue" = 1.0,"White" = 1.0,"Yellow" = 1.0}
 const Fruit: Dictionary = {"Apple" = 3.0,"Banana" = 2.0,"Berry" = 1.0,"Cactus" = 3.0,"Grape" = 5.0,
 "Orange" = 3.0,"Palulu" = 2.0,"Pear" = 3.0,"Rainbow" = 8.0}
@@ -99,7 +100,7 @@ func _ready() -> void:
 	typeList.clear()
 	for i in seedTypeNameArray:
 		typeList.add_item(i,null,true)
-	versionLabel.text = version
+	versionLabel.text = versionName
 	SeedNumCountList.clear()
 	updateFertilityLabels()
 
