@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ini1f51ghfyo"
-path="res://.godot/imported/index.png-0c78d14d192abe5f22f8c25928ca1ab8.ctex"
+uid="uid://dfilu6w1c2g0h"
+path="res://.godot/imported/FertCalc.apple-touch-icon.png-3817755bacdcf3879512bce9aab31521.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://docs/index.png"
-dest_files=["res://.godot/imported/index.png-0c78d14d192abe5f22f8c25928ca1ab8.ctex"]
+source_file="res://html_export/FertCalc.apple-touch-icon.png"
+dest_files=["res://.godot/imported/FertCalc.apple-touch-icon.png-3817755bacdcf3879512bce9aab31521.ctex"]
 
 [params]
 
