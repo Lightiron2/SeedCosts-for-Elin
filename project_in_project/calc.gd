@@ -76,10 +76,8 @@ var resetSafetyTwo: bool = false
 
 @export var seedMenu: ItemList
 @export var typeMenu: ItemList
-var typeNumber: int = 0
 
-var nameTarget: String = "No Target"
-
+var resetting:bool = false
 
 var checkDicNArraySize: bool = true
 const seedCostArray: Array[Dictionary] = [Fiber,Flowers,Fruit,Grass,Herb,Mushroom,Nuts,Ornamental,
@@ -104,19 +102,26 @@ func _ready() -> void:
 	SeedNumCountList.clear()
 	updateFertilityLabels()
 
-func calcFertCost(id: int,Name:String,ammount:float):
-	if ammount < 0:
-		return
-	mutableDicsArray[id][Name] = ammount
+func calcFertCost(value:float):
 	var newFertilityCost: float = 0.0
-	for key in seedCostArray[id]:
-		newFertilityCost += seedCostArray[id][key] * mutableDicsArray[id][key]
-	curCostArray[id] = newFertilityCost
-	var newTotalCost: float = 0.0
+	newTotalCost = 0.0
+	if value < 0:
+		return
+	if editing:
+		#adds seedcount to mutable array
+		mutableDicsArray[editTypeID][nameTarget] = value
+		#multiplies and adds result to var
+		for key in seedCostArray[editTypeID]:
+			newFertilityCost += seedCostArray[editTypeID][key] * mutableDicsArray[editTypeID][key]
+		curCostArray[editTypeID] = newFertilityCost
+	else:
+		mutableDicsArray[typeID][nameTarget] = value
+		for key in seedCostArray[typeID]:
+			newFertilityCost += seedCostArray[typeID][key] * mutableDicsArray[typeID][key]
+		curCostArray[typeID] = newFertilityCost
+	#adds all floats in array to total cost
 	for cost in curCostArray:
 		newTotalCost += cost
-	addToCountList(Name,ammount,id)
-	fertilityCost = newTotalCost
 
 func updateFertilityLabels():
 	var newFertDif: float = maxFertility - fertilityCost
@@ -131,34 +136,15 @@ func updateFertilityLabels():
 		fertilityDifferenceLabel.add_theme_color_override("font_color",Color(0.4, 0.4, 0.4))
 		return
 
-func _on_seed_selected(index: int) -> void:
-	SeedNumCountList.deselect_all()
-	nameTarget = seedMenu.get_item_text(index)
-	if inputBox.value > 0:
-		preventTriggerOnSeedOrTypeChange = true
-		inputBox.value = 0
-
-func _on_seed_type_selected(index: int) -> void:
-	if inputBox.value > 0:
-		preventTriggerOnSeedOrTypeChange = true
-		inputBox.value = 0
-	typeNumber = index
-	nameTarget = "No Target"
-	if typeMenu.item_count > 0:
-		seedMenu.clear()
-	var typeDic: Dictionary = seedCostArray[index]
-	for key in typeDic:
-		seedMenu.add_item(key,null,true)
-var resetting:bool = false
-func _on_spin_box_value_changed(value: float) -> void:
+func _on_spin_box_value_changed(_value: float) -> void:
 	if resetting:
 		return
 	if preventTriggerOnSeedOrTypeChange:
 		preventTriggerOnSeedOrTypeChange = false
 		return
-	if nameTarget == "No Target":
-		return
-	calcFertCost(typeNumber,nameTarget,value)
+#	if nameTarget == "No Target":
+#		return
+#	calcFertCost(value)
 
 func _on_reset_safety_item_clicked(index: int, _at_position: Vector2, _mouse_button_index: int) -> void:
 	if index == 0:
@@ -168,7 +154,12 @@ func _on_reset_safety_item_clicked(index: int, _at_position: Vector2, _mouse_but
 
 func _on_reset_button_up() -> void:
 	if resetSafetyOne && resetSafetyTwo == true:
+		print(curCostArray, "this one")
+		print(fertilityCost)
+		editing = false
 		resetting = true
+		aftrFrstAdId = -1
+		customSpinBox.queue_free()
 		SeedNameCountList.clear()
 		SeedNumCountList.clear()
 		seedCountTypeArray.clear()
@@ -181,62 +172,126 @@ func _on_reset_button_up() -> void:
 					print(dic[key])
 		var i = curCostArray.size()
 		while i > 0:
-			print(curCostArray[i-1])
 			curCostArray[i-1] = 0.0
-			print(curCostArray[i-1])
 			i -= 1
 		fertilityCost = 0
-		inputBox.value = 0
+#		inputBox.value = 0
 		resetting = false
 		print(curCostArray)
 
-func addToCountList(seedName:String,seedCount: float, arrayId: int):
-	var countListNum: int = SeedNameCountList.item_count - 1
+var aftrFrstAdId: int
+func editOrAddToList(seedCount: float):
 	if seedCount < 0:
 		return
-	while countListNum > -1:
-		var sCL: String = SeedNameCountList.get_item_text(countListNum)
-		if seedName == sCL:
-			if seedCount == 0.0:
-				SeedNameCountList.remove_item(countListNum)
-				SeedNumCountList.remove_item(countListNum)
-				seedCountTypeArray.remove_at(countListNum)
-				return
-			SeedNameCountList.set_item_text(countListNum,seedName)
-			SeedNumCountList.set_item_text(countListNum,str(seedCount))
+	if editing:
+		if seedCount == 0:
+			SeedNameCountList.remove_item(editListID)
+			SeedNumCountList.remove_item(editListID)
+			seedCountTypeArray.remove_at(editListID)
 			return
-		countListNum -= 1
-	SeedNameCountList.add_item(seedName,null,false)
-	SeedNumCountList.add_item(str(seedCount),null,true)
-	seedCountTypeArray.append(arrayId)
+		SeedNumCountList.set_item_text(editListID,str(seedCount))
+		return
+	
+	if aftrFrstAdId < 0:
+		SeedNameCountList.add_item(nameTarget,null,false)
+		SeedNumCountList.add_item(str(seedCount),null,true)
+		seedCountTypeArray.append(typeID)
+		aftrFrstAdId = seedCountTypeArray.size() - 1
+		return
+	else:
+		SeedNumCountList.set_item_text(aftrFrstAdId,str(seedCount))
+
+func _on_seed_type_selected(index: int) -> void:
+#	if inputBox.value > 0:
+#		preventTriggerOnSeedOrTypeChange = true
+#		inputBox.value = 0
+	SeedNumCountList.deselect_all()
+	seedMenu.deselect_all()
+	typeID = index
+	nameTarget = "No Target"
+	if typeMenu.item_count > 0:
+		seedMenu.clear()
+	var typeDic: Dictionary = seedCostArray[index]
+	for key in typeDic:
+		seedMenu.add_item(key,null,true)
+	if customSpinBox != null:
+		customSpinBox.queue_free()
+
+func _on_seed_selected(index: int) -> void:
+	editing = false
+	SeedNumCountList.deselect_all()
+	nameTarget = seedMenu.get_item_text(index)
+	createNumInput(get_global_mouse_position(),0.0)
+#	if inputBox.value > 0:
+#		preventTriggerOnSeedOrTypeChange = true
+#		inputBox.value = 0
 
 func _on_seed_num_count_list_item_selected(index: int) -> void:
+	var seedNameNum: String = SeedNumCountList.get_item_text(index)
+	var value:float = float(seedNameNum)
+	var mousePos: Vector2 = get_global_mouse_position()
+	mousePos.x = clampf(mousePos.x,0,630)
+	editing = true
+	editListID = index
+	editTypeID = seedCountTypeArray[index]
+	nameTarget = SeedNameCountList.get_item_text(index)
 	seedMenu.deselect_all()
-	var seedName: String = SeedNameCountList.get_item_text(index)
-	nameTarget = seedName
-	if inputBox.value > 0:
-		preventTriggerOnSeedOrTypeChange = true
-		inputBox.value = 0
+	createNumInput(mousePos,value)
+	#old spinBox
+#	if inputBox.value > 0:
+#		preventTriggerOnSeedOrTypeChange = true
+#		inputBox.value = 0
 
 func _on_max_fertility_value_changed(value: float) -> void:
 	maxFertility = value
 
-var customSpinBox: SpinBox
-func createNumInput(listNode: ItemList,mousePos: Vector2):
+var editing: bool = false
+var customSpinBox: SpinBox = null
+var typeID: int = 0
+var editListID: int = 0
+var editTypeID: int = 0
+var nameTarget: String = "No Target"
+var newTotalCost: float = 0.0
+#typeID takes from browser list, editing takes from numListTypeArray
+func createNumInput(mousePos: Vector2,value: float):
 	if customSpinBox:
 		customSpinBox.queue_free()
+	aftrFrstAdId = -1
 	customSpinBox = SpinBox.new()
-	if !listNode:
-		self.add_child(customSpinBox)
-		customSpinBox.global_position = mousePos
-		customSpinBox.update_on_text_changed = true
-		customSpinBox.rounded = true
-		customSpinBox.editable = true
-		customSpinBox.alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		customSpinBox.min_value = 0.0
-		customSpinBox.max_value = 10000.0
-		customSpinBox.step = 1.0
-		customSpinBox.value = 0.0
-		customSpinBox.connect("value_changed", Callable(self, "thisone"))
-func thisone(value: float, listNode: ItemList):
-	print(value, "  ",listNode)
+	self.add_child(customSpinBox)
+	customSpinBox.global_position = mousePos
+	customSpinBox.rounded = true
+	customSpinBox.editable = true
+	customSpinBox.alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	customSpinBox.min_value = 0.0
+	customSpinBox.max_value = 10000.0
+	customSpinBox.step = 1.0
+	customSpinBox.value = value
+	#below value, above update changed
+	checkIfEditSense()
+	customSpinBox.update_on_text_changed = true
+	customSpinBox.connect("value_changed", Callable(self, "thisone"))
+
+func thisone(value: float):
+	if resetting:
+		return
+	if nameTarget == "No Target":
+		return
+	calcFertCost(value)
+	editOrAddToList(value)
+	fertilityCost = newTotalCost
+
+func checkIfEditSense():
+	var itemCount = SeedNameCountList.item_count
+	while itemCount > 0:
+		var i = clampi(itemCount - 1,0,99)
+		var s = SeedNameCountList.get_item_text(i)
+		if nameTarget == s:
+			var seedNameNum: String = SeedNumCountList.get_item_text(i)
+			var value:float = float(seedNameNum)
+			editListID = i
+			editing = true
+			itemCount = 0
+			editTypeID = seedCountTypeArray[i]
+			customSpinBox.value = value
+		itemCount -= 1
