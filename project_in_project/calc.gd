@@ -66,7 +66,6 @@ var cVegetables: float = 0.0
 @export var fertilityDifferenceLabel: Label
 @export var SeedNameCountList: ItemList
 @export var SeedNumCountList: ItemList
-var seedCountTypeArray: Array = []
 
 @export var inputBox: SpinBox
 var preventTriggerOnSeedOrTypeChange: bool = false
@@ -88,8 +87,32 @@ var mutableDicsArray: Array[Dictionary] = [FiberChosen,FlowersChosen,FruitChosen
 	MushroomChosen,NutsChosen,OrnamentalChosen,PastureChosen,StrawChosen,TreesChosen,VegetableChosen,]
 var curCostArray: Array[float] = [cFiber,cFlowers,cFruits,cGrass,cHerbs,cMushrooms,cNuts,
 	cOrnamentals,cPastures,cStraws,cTrees,cVegetables]
+var seedCountTypeArray: Array = []
 
+var testing: bool = false
 func _ready() -> void:
+	if testing:
+		var testes: bool = true
+		var arraySize: int = seedCostArray.size()
+		if arraySize != mutableDicsArray.size():
+			print("seedCost & Mutable arrays not same size")
+			testes = false
+		if arraySize != seedTypeNameArray.size():
+			print("seedCost & seedTypeName not same size")
+			testes = false
+		if arraySize != curCostArray.size():
+			print("seedCost & curCostArray not same size")
+			testes = false
+		if testes:
+			for i in seedCostArray.size():
+				if testes:
+					var keyO = seedCostArray[i].keys()
+					var keyT = mutableDicsArray[i].keys()
+					keyO.sort()
+					keyT.sort()
+					if keyO != keyT:
+						print("keys do not match: ",keyO, ":  and  :",keyT)
+						testes = false
 	if checkDicNArraySize:
 		print(seedCostArray.size(),": seedCostArray Size")
 		print(seedTypeNameArray.size(),": seedTypeNameArray Size")
@@ -107,14 +130,14 @@ func calcFertCost(value:float):
 	newTotalCost = 0.0
 	if value < 0:
 		return
-	if editing:
+	if editing && not swapping:
 		#adds seedcount to mutable array
 		mutableDicsArray[editTypeID][nameTarget] = value
 		#multiplies and adds result to var
 		for key in seedCostArray[editTypeID]:
 			newFertilityCost += seedCostArray[editTypeID][key] * mutableDicsArray[editTypeID][key]
 		curCostArray[editTypeID] = newFertilityCost
-	else:
+	if !editing && not swapping:
 		mutableDicsArray[typeID][nameTarget] = value
 		for key in seedCostArray[typeID]:
 			newFertilityCost += seedCostArray[typeID][key] * mutableDicsArray[typeID][key]
@@ -122,6 +145,8 @@ func calcFertCost(value:float):
 	#adds all floats in array to total cost
 	for cost in curCostArray:
 		newTotalCost += cost
+	if swapping:
+		fertilityCost = newTotalCost
 
 func updateFertilityLabels():
 	var newFertDif: float = maxFertility - fertilityCost
@@ -156,6 +181,7 @@ func _on_reset_button_up() -> void:
 	if resetSafetyOne && resetSafetyTwo == true:
 		print(curCostArray, "this one")
 		print(fertilityCost)
+		swapping = false
 		editing = false
 		resetting = true
 		aftrFrstAdId = -1
@@ -163,6 +189,7 @@ func _on_reset_button_up() -> void:
 		SeedNameCountList.clear()
 		SeedNumCountList.clear()
 		seedCountTypeArray.clear()
+		SeedNameCountList.deselect_all()
 		SeedNumCountList.deselect_all()
 		seedMenu.deselect_all()
 		for dic in mutableDicsArray:
@@ -193,7 +220,7 @@ func editOrAddToList(seedCount: float):
 		return
 	
 	if aftrFrstAdId < 0:
-		SeedNameCountList.add_item(nameTarget,null,false)
+		SeedNameCountList.add_item(nameTarget,null,true)
 		SeedNumCountList.add_item(str(seedCount),null,true)
 		seedCountTypeArray.append(typeID)
 		aftrFrstAdId = seedCountTypeArray.size() - 1
@@ -295,3 +322,37 @@ func checkIfEditSense():
 			editTypeID = seedCountTypeArray[i]
 			customSpinBox.value = value
 		itemCount -= 1
+
+var swapping: bool = false
+var swapOrigin: Array = []
+var swapTarget: Array = []
+func _on_seed_name_count_list_item_selected(index: int) -> void:
+	if customSpinBox != null:
+		customSpinBox.queue_free()
+	if swapping:
+		addToSwapArrays(index,swapping)
+		swapper()
+	swapOrigin.clear()
+	swapTarget.clear()
+	SeedNumCountList.deselect_all()
+	seedMenu.deselect_all()
+	addToSwapArrays(index,swapping)
+	swapping = true
+
+func addToSwapArrays(index: int,target: bool):
+	#type, name, ammount. in that order
+	if !target:
+		swapOrigin.append(seedCountTypeArray[index])
+		swapOrigin.append(SeedNameCountList.get_item_text(index))
+		swapOrigin.append(SeedNumCountList.get_item_text(index))
+	else:
+		swapTarget.append(seedCountTypeArray[index])
+		swapTarget.append(SeedNameCountList.get_item_text(index))
+		swapTarget.append(SeedNumCountList.get_item_text(index))
+
+func swapper():
+	var oriType: int = swapOrigin[0]
+	var oriName: String = swapOrigin[1]
+	var oriNum: float = float(swapOrigin[2])
+	
+	pass

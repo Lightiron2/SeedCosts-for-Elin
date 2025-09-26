@@ -124,6 +124,7 @@ offset_left = 113.0
 offset_top = -166.0
 offset_right = 153.0
 offset_bottom = -126.0
+select_mode = 2
 auto_width = true
 auto_height = true
 
@@ -200,6 +201,7 @@ text = "Reset"
 
 [connection signal="value_changed" from="Control/numInput" to="." method="_on_spin_box_value_changed"]
 [connection signal="value_changed" from="Control/maxFertility" to="." method="_on_max_fertility_value_changed"]
+[connection signal="item_selected" from="Control/Lists/SeedNameCountList" to="." method="_on_seed_name_count_list_item_selected"]
 [connection signal="item_selected" from="Control/Lists/SeedNumCountList" to="." method="_on_seed_num_count_list_item_selected"]
 [connection signal="item_selected" from="Control/Lists/TypeMenu" to="." method="_on_seed_type_selected"]
 [connection signal="item_selected" from="Control/Lists/SeedMenu" to="." method="_on_seed_selected"]
