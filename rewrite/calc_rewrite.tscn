@@ -1,0 +1,86 @@
+[gd_scene load_steps=2 format=3 uid="uid://13duchjjilv2"]
+
+[ext_resource type="Script" uid="uid://dut5drsd0b8sj" path="res://rewrite/calc_rewrite.gd" id="1_3wlo8"]
+
+[node name="calcRewrite" type="Control" node_paths=PackedStringArray("fertilityDifferenceLabel", "typeMenu", "seedsMenu", "seedNameList")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_3wlo8")
+fertilityDifferenceLabel = NodePath("Control/Label")
+typeMenu = NodePath("Control/TypeMenu")
+seedsMenu = NodePath("Control/SeedMenu")
+seedNameList = NodePath("Control/seedNameList")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TypeMenu" type="ItemList" parent="Control"]
+layout_mode = 0
+offset_left = -322.0
+offset_top = -249.0
+offset_right = -282.0
+offset_bottom = -209.0
+auto_width = true
+auto_height = true
+
+[node name="SeedMenu" type="ItemList" parent="Control"]
+layout_mode = 0
+offset_left = -137.0
+offset_top = -243.0
+offset_right = -97.0
+offset_bottom = -203.0
+auto_width = true
+auto_height = true
+max_columns = 3
+
+[node name="seedNameList" type="ItemList" parent="Control"]
+layout_mode = 0
+offset_left = 113.0
+offset_top = -244.0
+offset_right = 153.0
+offset_bottom = -204.0
+auto_width = true
+auto_height = true
+
+[node name="seedAmmountList" type="ItemList" parent="Control"]
+layout_mode = 0
+offset_left = 280.0
+offset_top = -243.0
+offset_right = 320.0
+offset_bottom = -203.0
+auto_width = true
+auto_height = true
+
+[node name="Label" type="Label" parent="Control"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="SpinBox" type="SpinBox" parent="."]
+layout_mode = 0
+offset_left = 55.0
+offset_top = 412.0
+offset_right = 141.563
+offset_bottom = 443.0
+
+[connection signal="item_selected" from="Control/TypeMenu" to="." method="_on_type_menu_item_selected"]
+[connection signal="item_selected" from="Control/SeedMenu" to="." method="_on_seed_menu_item_selected"]
+[connection signal="item_selected" from="Control/seedNameList" to="." method="_on_current_seeds_item_selected"]
+[connection signal="item_selected" from="Control/seedAmmountList" to="." method="_on_seed_ammount_item_selected"]
