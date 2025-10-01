@@ -113,6 +113,7 @@ func _ready() -> void:
 					if keyO != keyT:
 						print("keys do not match: ",keyO, ":  and  :",keyT)
 						testes = false
+	addToDic(5,"flow","white")
 	if checkDicNArraySize:
 		print(seedCostArray.size(),": seedCostArray Size")
 		print(seedTypeNameArray.size(),": seedTypeNameArray Size")
@@ -142,11 +143,24 @@ func calcFertCost(value:float):
 		for key in seedCostArray[typeID]:
 			newFertilityCost += seedCostArray[typeID][key] * mutableDicsArray[typeID][key]
 		curCostArray[typeID] = newFertilityCost
+	if swapping:
+		print(mutableDicsArray[swapType])
+		print(curCostArray[swapType])
+		mutableDicsArray[swapOrigin[swapType]][swapOrigin[swapName]] = 0.0
+		mutableDicsArray[typeID][swapOrigin[swapOldSeed]] = value
+		for key in seedCostArray[typeID]:
+			newFertilityCost += seedCostArray[typeID][key] * mutableDicsArray[typeID][key]
+		curCostArray[typeID] = newFertilityCost
+		newFertilityCost = 0.0
+		for key in seedCostArray[swapType]:
+			newFertilityCost += seedCostArray[swapType][key] * mutableDicsArray[swapType][key]
+		curCostArray[swapType] = newFertilityCost
+		print(mutableDicsArray[swapType])
+		print(curCostArray[swapType])
 	#adds all floats in array to total cost
 	for cost in curCostArray:
 		newTotalCost += cost
-	if swapping:
-		fertilityCost = newTotalCost
+	
 
 func updateFertilityLabels():
 	var newFertDif: float = maxFertility - fertilityCost
@@ -185,7 +199,8 @@ func _on_reset_button_up() -> void:
 		editing = false
 		resetting = true
 		aftrFrstAdId = -1
-		customSpinBox.queue_free()
+		if customSpinBox:
+			customSpinBox.queue_free()
 		SeedNameCountList.clear()
 		SeedNumCountList.clear()
 		seedCountTypeArray.clear()
@@ -210,15 +225,19 @@ var aftrFrstAdId: int
 func editOrAddToList(seedCount: float):
 	if seedCount < 0:
 		return
+	if !editing && seedCount == 0:
+		editing = true
 	if editing:
-		if seedCount == 0:
+		if seedCount == 0 && SeedNameCountList.item_count > 0:
 			SeedNameCountList.remove_item(editListID)
 			SeedNumCountList.remove_item(editListID)
 			seedCountTypeArray.remove_at(editListID)
+			editing = false
 			return
 		SeedNumCountList.set_item_text(editListID,str(seedCount))
 		return
-	
+	if SeedNameCountList.item_count == 0:
+		aftrFrstAdId = -1
 	if aftrFrstAdId < 0:
 		SeedNameCountList.add_item(nameTarget,null,true)
 		SeedNumCountList.add_item(str(seedCount),null,true)
@@ -226,9 +245,11 @@ func editOrAddToList(seedCount: float):
 		aftrFrstAdId = seedCountTypeArray.size() - 1
 		return
 	else:
+		print(editing, SeedNameCountList.item_count, aftrFrstAdId)
 		SeedNumCountList.set_item_text(aftrFrstAdId,str(seedCount))
 
 func _on_seed_type_selected(index: int) -> void:
+	clearSwapper()
 #	if inputBox.value > 0:
 #		preventTriggerOnSeedOrTypeChange = true
 #		inputBox.value = 0
@@ -245,6 +266,15 @@ func _on_seed_type_selected(index: int) -> void:
 		customSpinBox.queue_free()
 
 func _on_seed_selected(index: int) -> void:
+	if swapping:
+		if swapOrigin.size() == swapArrayBaseSize:
+			var seedName: String = seedMenu.get_item_text(index)
+			swapper(seedName, 1)
+			calcFertCost(swapOrigin[swapAmmount])
+			return
+		clearSwapper()
+		seedMenu.deselect_all()
+		return
 	editing = false
 	SeedNumCountList.deselect_all()
 	nameTarget = seedMenu.get_item_text(index)
@@ -254,10 +284,12 @@ func _on_seed_selected(index: int) -> void:
 #		inputBox.value = 0
 
 func _on_seed_num_count_list_item_selected(index: int) -> void:
+	clearSwapper()
 	var seedNameNum: String = SeedNumCountList.get_item_text(index)
 	var value:float = float(seedNameNum)
 	var mousePos: Vector2 = get_global_mouse_position()
-	mousePos.x = clampf(mousePos.x,0,630)
+	mousePos.x = clampf(mousePos.x,30,630)
+	mousePos.y = clampf(mousePos.y,30,530)
 	editing = true
 	editListID = index
 	editTypeID = seedCountTypeArray[index]
@@ -326,12 +358,19 @@ func checkIfEditSense():
 var swapping: bool = false
 var swapOrigin: Array = []
 var swapTarget: Array = []
+const swapIndex: int = 0
+const swapType: int = 1
+const swapName: int = 2
+const swapAmmount: int = 3
+const swapOldSeed: int = 4
+const swapArrayBaseSize: int = 4
 func _on_seed_name_count_list_item_selected(index: int) -> void:
 	if customSpinBox != null:
 		customSpinBox.queue_free()
 	if swapping:
 		addToSwapArrays(index,swapping)
-		swapper()
+		swapper("No Target", 0)
+		return
 	swapOrigin.clear()
 	swapTarget.clear()
 	SeedNumCountList.deselect_all()
@@ -340,19 +379,71 @@ func _on_seed_name_count_list_item_selected(index: int) -> void:
 	swapping = true
 
 func addToSwapArrays(index: int,target: bool):
-	#type, name, ammount. in that order
+	#index, type, name, ammount. in that order
 	if !target:
+		swapOrigin.append(index)
 		swapOrigin.append(seedCountTypeArray[index])
 		swapOrigin.append(SeedNameCountList.get_item_text(index))
-		swapOrigin.append(SeedNumCountList.get_item_text(index))
+		swapOrigin.append(float(SeedNumCountList.get_item_text(index)))
 	else:
+		swapTarget.append(index)
 		swapTarget.append(seedCountTypeArray[index])
 		swapTarget.append(SeedNameCountList.get_item_text(index))
-		swapTarget.append(SeedNumCountList.get_item_text(index))
+		swapTarget.append(float(SeedNumCountList.get_item_text(index)))
 
-func swapper():
-	var oriType: int = swapOrigin[0]
-	var oriName: String = swapOrigin[1]
-	var oriNum: float = float(swapOrigin[2])
+func swapper(seedName: String, dif: int):
+	##array number in order from 0 to 4, index, type, name, ammount, oldSeed Name when menu swapping.
+	if dif == 0:
+		seedCountTypeArray[swapOrigin[swapIndex]] = swapTarget[swapType]
+		SeedNameCountList.set_item_text(swapOrigin[swapIndex],swapTarget[swapName])
+		SeedNumCountList.set_item_text(swapOrigin[swapIndex],str(swapTarget[swapAmmount]))
 	
-	pass
+		seedCountTypeArray[swapTarget[swapIndex]] = swapOrigin[swapType]
+		SeedNameCountList.set_item_text(swapTarget[swapIndex],swapOrigin[swapName])
+		SeedNumCountList.set_item_text(swapTarget[swapIndex],str(swapOrigin[swapAmmount]))
+		swapping = false
+		SeedNameCountList.deselect_all()
+		return
+	if dif == 1:
+		print(mutableDicsArray[swapType])
+		print(curCostArray[swapType])
+		SeedNameCountList.set_item_text(swapOrigin[swapIndex],seedName)
+		swapOrigin.append(seedName)
+		return
+	print("something wrong with swapping.")
+	return
+
+func clearSwapper():
+	if swapping:
+		swapOrigin.clear()
+		swapTarget.clear()
+		SeedNameCountList.deselect_all()
+		swapping = false
+
+
+
+
+
+
+
+
+
+
+var testDic: Dictionary = {}
+const staticTestDic: Dictionary = {
+	"flow" = {"white" = 1, "normal" = 1},
+	"tree" = {"fat" = 5, "skinny" = 1}
+}
+const testArray: Array = ["flow","tree"]
+var testTypeArray: Array = [1,5,2]
+var testAmmountArray: Array = [5,2,1]
+var testNameArray: Array = ["mushroom", "white", "birch"]
+func addToDic(value: float,type: String,seed: String):
+	var vals: float = 0.0
+	if not testDic.has(type):
+		testDic[type] = {}
+	testDic[type][seed] = value
+	for types in testDic:
+		for keys in testDic[types]:
+			vals += testDic[types][keys] * staticTestDic[types][keys]
+	var newfertilitcosting = vals
