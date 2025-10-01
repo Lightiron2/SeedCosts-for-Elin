@@ -126,6 +126,7 @@ func checkIfEntryExists():
 			for i in currentSeeds:
 				if i.has(menuTypeName) && i.has(seedName):
 					seedCheckerIndex = thisIndex
+					editingValue = true
 					return true
 				thisIndex += 1
 	return false
@@ -135,22 +136,36 @@ func addToDicAndArray(type: String,seed: String,value: float,):
 		testDic[type] = {}
 	if not testDic[type].has(seed):
 		testDic[type][seed] = value
-		var thisIndex: int = 0
-		seedCheckerIndex = -1
-		for i in currentSeeds:
-			if i.has(type) && i.has(seed):
-				print("already exists in array as index ",thisIndex)
-				return
-			thisIndex += 1
-		currentSeeds.append({"Type" = type, "Seed" = seed,"Amount" = value})
-		seedAmmountList.add_item(str(value),null,true)
-		seedNameList.add_item(seed,null,true)
-		addingFromSeedMenu = false
-		editingValue = true
+	var thisIndex: int = 0
+	seedCheckerIndex = -1
+	for i in currentSeeds:
+		if i.has(type) && i.has(seed):
+			print("already exists in array as index ",thisIndex)
+			seedCheckerIndex = thisIndex
+			return
+		thisIndex += 1
+	currentSeeds.append({"Type" = type, "Seed" = seed,"Amount" = value})
+	var seedsize = currentSeeds.size()
+	if seedsize > 0:
+		seedCheckerIndex = seedsize - 1
+	seedAmmountList.add_item(str(value),null,true)
+	seedNameList.add_item(seed,null,true)
+	addingFromSeedMenu = false
+	editingValue = true
 	return
 
-func editDicAndArray():
-	pass
+func editDicAndArray(value: int):
+	var tempType: String
+	var tempSeed: String
+	var tpId: int = seedCheckerIndex
+	if currentSeeds[tpId]:
+		tempType = currentSeeds[tpId]["Type"]
+		tempSeed = currentSeeds[tpId]["Seed"]
+		currentSeeds[tpId]["Amount"] = value
+		testDic[tempType][tempSeed] = value
+		seedAmmountList.set_item_text(tpId,str(value))
+		return
+	print("Array does not exist, edit func.")
 func removeFromDicAndArray(index: int):
 	if currentSeeds[index]:
 		var tempType: String = currentSeeds[index]["Type"]
@@ -222,12 +237,15 @@ func createInputBox(value: float,):
 func numberBox(value: float):
 	if value > 0.0:
 		if editingValue == true:
-			editDicAndArray()
+			editDicAndArray(value)
+			calculateCost()
 			pass
 			pass
 		if addingFromSeedMenu == true:
 			if not checkIfEntryExists():
 				addToDicAndArray(menuTypeName,seedName,value)
+				calculateCost()
+				return
 				pass
 				pass
 	if value == 0.0:
