@@ -1,40 +1,26 @@
 extends Control
 
-func _ready() -> void:
-	var existCheck = {"vas" = {"des" = 2}}
-	if existCheck.has(menuTypeName):
-		if existCheck[menuTypeName].has(seedName):
-			pass
-	#seed menu swap requires only oriArray and oriId, keep the old seed+type for editing dic func.
-	#seed menu swap changes the type and seed, save type+seed for dic add/remove.
-	#amount list dosent need to be called.
-	#create a checker for if the seedmenu seed already exists in the current seeds and dic.
-	pass
-	pass
-	pass
+var versionName: String = "Version: Rewrite 0.1"
+var version: float = 0.1
+@export var versionLabel: Label
 
-#to be code
-#currentSeeds.append({"Type" = menuTypeName, "Seed" = seedName,"Amount" = amount})
-#var cSeeds: Array = currentSeeds
-#if not testDic[cSeeds[0]["Type"]:
-#	testDic[cSeeds[0]["Type"] = {}
-#testDic[cSeeds[0]["Type"]][cSeeds[0]["Seed"] = cSeeds[0]["Amount"]
-#calculateCost()
+const Fiber: Dictionary = {"Cotton" = 2.0}
+const Flowers: Dictionary = {"Normal" = 1.0,"Blue" = 1.0,"White" = 1.0,"Yellow" = 1.0}
+const Fruit: Dictionary = {"Apple" = 3.0,"Banana" = 2.0,"Berry" = 1.0,"Cactus" = 3.0,"Grape" = 5.0,
+"Orange" = 3.0,"Palulu" = 2.0,"Pear" = 3.0,"Rainbow" = 8.0}
+const Grass: Dictionary = {"Weed" = 1.0,"Cattail" = 1.0}
+const Herb: Dictionary = {"Blue" = 2.0, "Green" = 2.0,"Purple" = 2.0,"Red" = 2.0,"Tobacc" = 6.0}
+const Mushroom: Dictionary = {"Mushroom" = 2.0}
+const Nuts: Dictionary = {"Api" = 2.0,"Coffee" = 4.0,"Crim" = 2.0}
+const Ornamental: Dictionary = {"Rafflesia" = 0.0,"Fern" = 0.0}
+const Pasture: Dictionary = {"Pasture" = 0.5,"Silver" = 0.5}
+const Straw: Dictionary = {"Rice" = 3.0,"Wheat" = 3.0}
+const Trees: Dictionary = {"Birch" = 0.5,"Cedar" = 0.5,"Cherry" = 0.5,"Christmas" = 0.5,"Coral" = 7.0,
+"Feywood" = 10.0,"Fir" = 0.5,"Mushroom Tree" = 0.5,"Mahogany" = 0.5,"Oak" = 0.5,"Pine" = 0.5,"Rosewood" = 0.5,}
+const Vegetable: Dictionary = {"Bamboo" = 1.0,"Cabbage" = 4.0,"Cabocchi" = 4.0,"Carrot" = 3.0,
+"Corn" = 4.0,"Imo" = 3.0,"Radish" = 4.0,"SeaweedDeep" = 4.0,"Tomato" = 3.0,}
 
-#var curArNum: int = currentSeeds.size()
-#if value == 0:
-#	array.erase curArNum
-#	if testDic[cSeeds[curArNum]["Type"]].size() =< 1:
-#		testDic.erase(cSeeds[curArNum]["Type"])
-#	else:
-#		testDic[cSeeds[curArNum]["Type"][cSeeds[curArNum]["Seed"]]
-#
 
-#var temp: Dictionary = currentSeeds[index]
-#var tempTarget: Dictionary = currentseeds[targetId]
-#currentSeeds[index] = tempTarget
-#currentSeeds[targetId] = temp
-#calculateCost()
 var addingFromSeedMenu: bool = false
 var editingValue: bool = false
 var swappingSelfContained: bool = false
@@ -45,14 +31,15 @@ var swapTargetArray: Array = []
 var swapOriginArray: Array = []
 
 
-
 const staticTestDic: Dictionary = {
-	"flow" = {"white" = 1, "normal" = 1},
-	"tree" = {"fat" = 5, "skinny" = 1}
+	"Fiber" = Fiber, "Flowers" = Flowers,"Fruit" = Fruit,"Grass" = Grass,"Herb" = Herb,
+	"Mushroom" = Mushroom,"Nuts" = Nuts,"Ornamental" = Ornamental,
+	"Pasture" = Pasture,"Straw" = Straw,"Trees" = Trees,"Vegetable" = Vegetable,
 }
 var testDic: Dictionary = {}
-const testArray: Array = ["flow","tree"]
-var typeNameArray: Array = ["flow","tree"]
+
+const typeNameArray: Array[String] = ["Fiber","Flowers","Fruit","Grass","Herb","Mushroom","Nuts","Ornamental",
+	"Pasture","Straw","Trees","Vegetable",]
 var menuTypeName: String = "No Target"
 var seedName: String = "No Target"
 var typeId: int = -1
@@ -74,14 +61,21 @@ var fertilityCost: float = 0.0:
 @export var typeMenu: ItemList
 @export var seedsMenu: ItemList
 @export var seedNameList: ItemList
-@export var seedAmmountList: ItemList
+@export var seedAmountList: ItemList
 
 var inputBox: SpinBox = null
 
+func _ready() -> void:
+	typeMenu.clear()
+	for key in typeNameArray:
+		typeMenu.add_item(key,null,true)
+	if versionLabel:
+		versionLabel.text = versionName
+
+#not tested
 func _on_type_menu_item_selected(index: int) -> void:
 	menuTypeName = typeNameArray[index]
-	seedAmmountList.deselect_all()
-	seedsMenu.deselect_all()
+	deselectAll()
 	typeId = index
 	seedName = "No Target"
 	if typeMenu.item_count > 0:
@@ -89,33 +83,38 @@ func _on_type_menu_item_selected(index: int) -> void:
 	for key in staticTestDic[menuTypeName]:
 		seedsMenu.add_item(key,null,true)
 	removeOldInputBox()
-
+#not tested
 func _on_seed_menu_item_selected(index: int) -> void:
 	amount = 0.0
 	removeOldInputBox()
 	seedName = seedsMenu.get_item_text(index)
-	if testDic.has(menuTypeName):
-		if testDic[menuTypeName].has(seedName):
-			editingValue = true
-			amount = testDic[menuTypeName][seedName]["Amount"]
-			createInputBox(amount)
+	if swapping:
+		if not checkIfEntryExists():
+			swapItem(index)
+			calculateCost()
 			return
-			pass
-			pass
-	createInputBox(0.0)
-
+		resetSwapping()
+		return
+	createInputBox(amount)
+#maybe done, not tested
 func _on_current_seeds_item_selected(index: int) -> void:
 	removeOldInputBox()
+	editingValue = false
 	if swapping == true:
+		swapTargetIndex = index
 		swappingSelfContained = true
-#		swapItem(index)
+		swapItem(index)
 		return
-	#swapOrigin = currentSeeds[index]
-	#swapOrigin["Index"] = index
+	swapOriginIndex = index
 	swapping = true
-
+#not tested
 func _on_seed_ammount_item_selected(index: int) -> void:
 	removeOldInputBox()
+	editingValue = true
+	swapping = false
+	swappingSelfContained = false
+	seedCheckerIndex = index
+	amount = currentSeeds[index]["Amount"]
 	createInputBox(amount)
 
 func checkIfEntryExists():
@@ -144,14 +143,15 @@ func addToDicAndArray(type: String,seed: String,value: float,):
 			seedCheckerIndex = thisIndex
 			return
 		thisIndex += 1
-	currentSeeds.append({"Type" = type, "Seed" = seed,"Amount" = value})
-	var seedsize = currentSeeds.size()
-	if seedsize > 0:
-		seedCheckerIndex = seedsize - 1
-	seedAmmountList.add_item(str(value),null,true)
-	seedNameList.add_item(seed,null,true)
-	addingFromSeedMenu = false
-	editingValue = true
+	if not swapping:
+		currentSeeds.append({"Type" = type, "Seed" = seed,"Amount" = value})
+		var seedsize = currentSeeds.size()
+		if seedsize > 0:
+			seedCheckerIndex = seedsize - 1
+		seedAmountList.add_item(str(value),null,true)
+		seedNameList.add_item(seed,null,true)
+		addingFromSeedMenu = false
+		editingValue = true
 	return
 
 func editDicAndArray(value: int):
@@ -163,7 +163,7 @@ func editDicAndArray(value: int):
 		tempSeed = currentSeeds[tpId]["Seed"]
 		currentSeeds[tpId]["Amount"] = value
 		testDic[tempType][tempSeed] = value
-		seedAmmountList.set_item_text(tpId,str(value))
+		seedAmountList.set_item_text(tpId,str(value))
 		return
 	print("Array does not exist, edit func.")
 func removeFromDicAndArray(index: int):
@@ -176,7 +176,8 @@ func removeFromDicAndArray(index: int):
 				testDic.erase(tempType)
 			if sizE > 1:
 				testDic[tempType].erase(tempSeed)
-		currentSeeds.remove_at(index)
+		if not swapping:
+			currentSeeds.remove_at(index)
 	editingValue = false
 	pass
 func swapItem(index: int):
@@ -191,23 +192,29 @@ func swapItem(index: int):
 			currentSeeds[swapTargetIndex][key] = swapOriginArray[ins]
 			currentSeeds[swapOriginIndex][key] = swapTargetArray[ins]
 			ins += 1
-		swapTargetArray.clear()
-		swapOriginArray.clear()
-		swapTargetIndex = -1
-		swapOriginIndex = -1
-		deselectAll()
-		swappingSelfContained = false
+		resetSwapping()
 		updateItemLists(-1)
+		return
+	if swapping:
+		var tempName: String = seedNameList.get_item_text(index)
+		var tempAmount: float = currentSeeds[swapOriginIndex]["Amount"]
+		addToDicAndArray(menuTypeName,tempName,tempAmount)
+		removeFromDicAndArray(swapOriginIndex)
+		currentSeeds[swapOriginIndex]["Seed"] = seedName
+		currentSeeds[swapOriginIndex]["Type"] = menuTypeName
+		seedNameList.set_item_text(swapOriginIndex,seedName)
+		resetSwapping()
+		pass
 func updateItemLists(index: int):
 	if index > -1:
 		seedNameList.remove_item(index)
-		seedAmmountList.remove_item(index)
+		seedAmountList.remove_item(index)
 	if index < 0:
 		seedNameList.clear()
-		seedAmmountList.clear()
+		seedAmountList.clear()
 		for item in currentSeeds:
 			seedNameList.add_item(item["Seed"],null,true)
-			seedAmmountList.add_item(item["Amount"],null,true)
+			seedAmountList.add_item(item["Amount"],null,true)
 func calculateCost():
 	var vals: float = 0.0
 	for types in testDic:
@@ -239,6 +246,7 @@ func numberBox(value: float):
 		if editingValue == true:
 			editDicAndArray(value)
 			calculateCost()
+			return
 			pass
 			pass
 		if addingFromSeedMenu == true:
@@ -277,5 +285,17 @@ func removeOldInputBox():
 
 func deselectAll():
 	seedsMenu.deselect_all()
-	seedAmmountList.deselect_all()
+	seedAmountList.deselect_all()
 	seedNameList.deselect_all()
+
+func resetSwapping():
+	swapping = false
+	swappingSelfContained = false
+	if swapTargetArray:
+		swapTargetArray.clear()
+	if swapOriginArray:
+		swapOriginArray.clear()
+	swapTargetIndex = -1
+	swapOriginIndex = -1
+	deselectAll()
+	pass
