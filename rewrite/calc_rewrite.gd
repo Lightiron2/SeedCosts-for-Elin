@@ -85,6 +85,7 @@ func _on_type_menu_item_selected(index: int) -> void:
 	removeOldInputBox()
 #not tested
 func _on_seed_menu_item_selected(index: int) -> void:
+	editingValue = false
 	amount = 0.0
 	removeOldInputBox()
 	seedName = seedsMenu.get_item_text(index)
@@ -95,6 +96,10 @@ func _on_seed_menu_item_selected(index: int) -> void:
 			return
 		resetSwapping()
 		return
+	if not checkIfEntryExists():
+		addingFromSeedMenu = true
+	else:
+		amount = currentSeeds[seedCheckerIndex]["Amount"]
 	createInputBox(amount)
 #maybe done, not tested
 func _on_current_seeds_item_selected(index: int) -> void:
@@ -123,7 +128,8 @@ func checkIfEntryExists():
 			var thisIndex: int = 0
 			seedCheckerIndex = -1
 			for i in currentSeeds:
-				if i.has(menuTypeName) && i.has(seedName):
+				print(i)
+				if i["Type"] == menuTypeName && i["Seed"] == seedName:
 					seedCheckerIndex = thisIndex
 					editingValue = true
 					return true
@@ -154,7 +160,7 @@ func addToDicAndArray(type: String,seed: String,value: float,):
 		editingValue = true
 	return
 
-func editDicAndArray(value: int):
+func editDicAndArray(value: float):
 	var tempType: String
 	var tempSeed: String
 	var tpId: int = seedCheckerIndex
@@ -196,9 +202,9 @@ func swapItem(index: int):
 		updateItemLists(-1)
 		return
 	if swapping:
-		var tempName: String = seedNameList.get_item_text(index)
+		var tempName: String = seedNameList.get_item_text(swapOriginIndex)
 		var tempAmount: float = currentSeeds[swapOriginIndex]["Amount"]
-		addToDicAndArray(menuTypeName,tempName,tempAmount)
+		addToDicAndArray(menuTypeName,seedName,tempAmount)
 		removeFromDicAndArray(swapOriginIndex)
 		currentSeeds[swapOriginIndex]["Seed"] = seedName
 		currentSeeds[swapOriginIndex]["Type"] = menuTypeName
@@ -214,7 +220,7 @@ func updateItemLists(index: int):
 		seedAmountList.clear()
 		for item in currentSeeds:
 			seedNameList.add_item(item["Seed"],null,true)
-			seedAmountList.add_item(item["Amount"],null,true)
+			seedAmountList.add_item(str(item["Amount"]),null,true)
 func calculateCost():
 	var vals: float = 0.0
 	for types in testDic:
