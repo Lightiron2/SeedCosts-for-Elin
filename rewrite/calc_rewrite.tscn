@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dut5drsd0b8sj" path="res://rewrite/calc_rewrite.gd" id="1_3wlo8"]
 
-[node name="calcRewrite" type="Control" node_paths=PackedStringArray("versionLabel", "fertilityDifferenceLabel", "maximumFertilityLabel", "typeMenu", "seedsMenu", "seedNameList", "seedAmountList", "resetSafetyButton", "resetButton", "loadLine", "saveLoadList", "slPopupParent")]
+[node name="calcRewrite" type="Control" node_paths=PackedStringArray("versionLabel", "fertilityDifferenceLabel", "maximumFertilityLabel", "typeMenu", "seedsMenu", "seedNameList", "seedAmountList", "resetSafetyButton", "resetButton", "loadLine", "saveLoadList", "slPopupParent", "slPopupTimer")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -24,6 +24,7 @@ resetButton = NodePath("Control/ResetButton")
 loadLine = NodePath("Control/LoadLine")
 saveLoadList = NodePath("Control/SaveLoadList")
 slPopupParent = NodePath("Control/slPopup")
+slPopupTimer = NodePath("Control/slPopupTimer")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 1
@@ -179,6 +180,9 @@ offset_top = 215.0
 offset_right = -12.0
 offset_bottom = 255.0
 
+[node name="slPopupTimer" type="Timer" parent="Control"]
+one_shot = true
+
 [node name="maxFertSpinBox" type="SpinBox" parent="."]
 layout_mode = 0
 offset_left = 136.0
@@ -197,4 +201,5 @@ rounded = true
 [connection signal="button_up" from="Control/ResetButton" to="." method="_on_reset_button_button_up"]
 [connection signal="text_submitted" from="Control/LoadLine" to="." method="_on_load_line_text_submitted"]
 [connection signal="item_selected" from="Control/SaveLoadList" to="." method="_on_save_load_list_item_selected"]
+[connection signal="timeout" from="Control/slPopupTimer" to="." method="_on_sl_popup_timer_timeout"]
 [connection signal="value_changed" from="maxFertSpinBox" to="." method="_on_max_fert_spin_box_value_changed"]

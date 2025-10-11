@@ -7,8 +7,8 @@ extends Control
 
 #int instead of array copy
 
-var versionName: String = "Version: Rewrite 0.1"
-var version: float = 0.1
+var versionName: String = "Version: Rewrite 1.0"
+var version: float = 1.0
 @export var versionLabel: Label
 
 const Fiber: Dictionary = {"Cotton" = 2.0}
@@ -88,7 +88,7 @@ var fertilityCost: float = 0.0:
 @export var saveLoadList: ItemList
 
 @export var slPopupParent: Control
-
+@export var slPopupTimer: Timer
 var inputBox: SpinBox = null
 var slPopup: Label = null
 
@@ -285,15 +285,11 @@ func numberBox(value: float):
 			editDicAndArray(value)
 			calculateCost()
 			return
-			pass
-			pass
 		if addingFromSeedMenu == true:
 			if not checkIfEntryExists():
 				addToDicAndArray(menuTypeName,seedName,value)
 				calculateCost()
 				return
-				pass
-				pass
 	if value == 0.0:
 		if checkIfEntryExists():
 			removeFromDicAndArray(seedCheckerIndex)
@@ -382,14 +378,17 @@ func loadStats(loadString: String):
 	var i: int = 0
 	if error != 0:
 		loadLine.clear()
+		slPopupFunc("Not Json Parsable.", 1.5)
 		return
 	var tA = JSON.parse_string(loadString)
 	if tA is not Array:
 		loadLine.clear()
+		slPopupFunc("Wrong Format, not an array.", 1.5)
 		return
 	var tas = tA.size()
 	if tas % 3 != 0:
 		loadLine.clear()
+		slPopupFunc("Wrong amount of items, not divisable by 3.", 1.5)
 		return
 	currentSeeds.clear()
 	testDic.clear()
@@ -398,6 +397,7 @@ func loadStats(loadString: String):
 	for item in tA:
 		if item is not float:
 			loadLine.clear()
+			slPopupFunc("One or more items are not floats. e.g 1.0, 1.1, 2.5", 1.5)
 			return
 	while i < tas:
 		vit.append(clampf(tA[i],1.0,10000.0))
@@ -422,16 +422,16 @@ func loadStats(loadString: String):
 	calculateCost()
 	loadLine.clear()
 	loadLine.hide()
+	slPopupFunc("Loaded", 1.5)
 
 func saveStats():
 	var si = currentSeeds.size()
-	if si == 0:
+	if si <= 0:
+		slPopupFunc("Nothing to save.", 1.5)
 		return
 	var saveInfo: Array
 	var iterationNumber: int = 0
 	var maxIterations: int = currentSeeds.size()
-	if maxIterations <= iterationNumber:
-		return
 	while iterationNumber < maxIterations:
 		var itType: String = currentSeeds[iterationNumber]["Type"]
 		var itSeed: String = currentSeeds[iterationNumber]["Seed"]
@@ -446,8 +446,12 @@ func saveStats():
 		saveInfo.append(currentSeeds[iterationNumber]["Amount"])
 		iterationNumber += 1
 	var infoString: String = str(saveInfo)
-	DisplayServer.clipboard_set(infoString)
-	saveLoadList.release_focus()
+	if saveInfo.size() > 0:
+		DisplayServer.clipboard_set(infoString)
+		saveLoadList.release_focus()
+		slPopupFunc("Copied to ClipBoard", 1.5)
+	else:
+		slPopupFunc("Could Not Successfully save info.", 1.5)
 
 func _on_save_load_list_item_selected(index: int) -> void:
 	removeOldInputBox()
@@ -469,5 +473,21 @@ func _on_load_line_text_submitted(load_text: String) -> void:
 	if load_text:
 		loadStats(load_text)
 
-func slPopupFunc():
-	pass
+func slPopupFunc(text: String,time: float):
+	if slPopup:
+		slPopup.queue_free()
+	slPopup = Label.new()
+	slPopupParent.add_child(slPopup)
+	slPopup.set_position(Vector2(0,0))
+	slPopup.add_theme_color_override("font_shadow_color",Color.BLACK)
+	slPopup.text = text
+	slTimer(time)
+
+func slTimer(time: float):
+	if slPopupTimer:
+		slPopupTimer.stop()
+		slPopupTimer.one_shot = true
+		slPopupTimer.start(time)
+func _on_sl_popup_timer_timeout() -> void:
+	if slPopup:
+		slPopup.queue_free()
