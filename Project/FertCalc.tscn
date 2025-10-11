@@ -154,12 +154,13 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Seed Types       Seeds                                                                   Current Seeds        Amounts"
 
 [node name="LoadLine" type="LineEdit" parent="Control"]
-visible = false
 layout_mode = 0
 offset_left = -48.0
 offset_top = 258.0
 offset_right = 20.5625
 offset_bottom = 289.0
+emoji_menu_enabled = false
+clear_button_enabled = true
 
 [node name="SaveLoadList" type="ItemList" parent="Control"]
 layout_mode = 0
