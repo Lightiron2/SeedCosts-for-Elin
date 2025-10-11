@@ -1,4 +1,4 @@
 # SeedCost for Elin
- Personal Elin seed calculator for fertility cost.
+ Personal Elin fertility calculator.
 
 https://lightiron2.github.io/SeedCosts-for-Elin/
