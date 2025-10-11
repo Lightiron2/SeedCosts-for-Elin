@@ -43,7 +43,8 @@ const seedNameArray: Array[String] = ["Cotton", "Normal", "Blue", "White", "Yell
  "Berry", "Cactus", "Grape", "Orange", "Palulu", "Pear", "Rainbow", "Weed", "Cattail", "Green", "Purple",
  "Red", "Tobacc", "Mushroom", "Api", "Coffee", "Crim", "Rafflesia", "Fern", "Pasture", "Silver",
  "Rice", "Wheat", "Birch", "Cedar", "Cherry", "Christmas", "Coral", "Feywood", "Fir", "Mushroom Tree",
- "Mahogany", "Oak", "Pine", "Rosewood"]
+ "Mahogany", "Oak", "Pine", "Rosewood","Bamboo","Cabbage","Cabocchi","Carrot","Corn","Imo","Radish",
+ "SeaweedDeep","Tomato"]
 
 const typeNameArray: Array[String] = ["Fiber","Flowers","Fruit","Grass","Herb","Mushroom","Nuts","Ornamental",
 	"Pasture","Straw","Trees","Vegetable",]
@@ -86,7 +87,10 @@ var fertilityCost: float = 0.0:
 @export var loadLine: LineEdit
 @export var saveLoadList: ItemList
 
+@export var slPopupParent: Control
+
 var inputBox: SpinBox = null
+var slPopup: Label = null
 
 func _ready() -> void:
 	typeMenu.clear()
@@ -95,14 +99,6 @@ func _ready() -> void:
 	if versionLabel:
 		versionLabel.text = versionName
 	updateFertilityLabels()
-	
-	var tstar: Array[int] = [1,5,100,3,2,3,1,1,222,3,7,11,1,1,1,1,1,1,11,1,1]
-	var vit: String = str(tstar)
-	print(vit)
-	DisplayServer.clipboard_set(vit)
-	var tit: Array = vit.split(",",false)
-	print(tit)
-	print(tit.size())
 
 
 func _on_type_menu_item_selected(index: int) -> void:
@@ -366,7 +362,7 @@ func resetting(ableToReset: bool):
 		typeMenu.deselect_all()
 		removeOldInputBox()
 		resetAble = false
-		resetSafetyButton.set_toggle_mode(false)
+		resetSafetyButton.button_pressed = false
 		resetButton.release_focus()
 		return
 
@@ -395,6 +391,10 @@ func loadStats(loadString: String):
 	if tas % 3 != 0:
 		loadLine.clear()
 		return
+	currentSeeds.clear()
+	testDic.clear()
+	seedNameList.clear()
+	seedAmountList.clear()
 	for item in tA:
 		if item is not float:
 			loadLine.clear()
@@ -402,47 +402,72 @@ func loadStats(loadString: String):
 	while i < tas:
 		vit.append(clampf(tA[i],1.0,10000.0))
 		i += 1
-	print(vit," this one")
 	var tempTypeId: int = 0
 	var tempNameId: int = 1
 	var tempAmountId: int = 2
 	var iterations: int = tas / 3
 	var currentIteration: int = 0
+	#typeint, seedint, amountint, 0,1,2, += 3
 	while currentIteration < iterations:
 		var tempType: String = typeNameArray[int(vit[tempTypeId])]
 		var tempSeed: String = seedNameArray[int(vit[tempNameId])]
 		var tempAmount: float = vit[tempAmountId]
-		addToDicAndArray(tempType,tempSeed,tempAmount)
+		if staticTestDic.has(tempType):
+			if staticTestDic[tempType].has(tempSeed):
+				addToDicAndArray(tempType,tempSeed,tempAmount)
 		tempTypeId += 3
 		tempNameId += 3
 		tempAmountId += 3
 		currentIteration += 1
-		pass
 	calculateCost()
-	#typeint, seedint, amountint, 0,1,2, += 3
 	loadLine.clear()
 	loadLine.hide()
 
 func saveStats():
-	removeOldInputBox()
-	var temp = JSON.from_native(currentSeeds, false)
-	var t = JSON.stringify(temp,"",false,true)
-	print(JSON.to_native(temp), ": this")
-	print(t)
-	DisplayServer.clipboard_set(t)
+	var si = currentSeeds.size()
+	if si == 0:
+		return
+	var saveInfo: Array
+	var iterationNumber: int = 0
+	var maxIterations: int = currentSeeds.size()
+	if maxIterations <= iterationNumber:
+		return
+	while iterationNumber < maxIterations:
+		var itType: String = currentSeeds[iterationNumber]["Type"]
+		var itSeed: String = currentSeeds[iterationNumber]["Seed"]
+		var tpNum: int = typeNameArray.find(itType)
+		var sdNum: int = seedNameArray.find(itSeed)
+		if tpNum < 0:
+			return
+		if sdNum < 0:
+			return
+		saveInfo.append(tpNum)
+		saveInfo.append(sdNum)
+		saveInfo.append(currentSeeds[iterationNumber]["Amount"])
+		iterationNumber += 1
+	var infoString: String = str(saveInfo)
+	DisplayServer.clipboard_set(infoString)
 	saveLoadList.release_focus()
 
 func _on_save_load_list_item_selected(index: int) -> void:
+	removeOldInputBox()
 	var tempString: String = saveLoadList.get_item_text(index)
 	if tempString == "Save":
 		if currentSeeds:
 			saveStats()
 		saveLoadList.deselect_all()
+		return
 	if tempString == "Load":
 		loadLine.clear()
 		loadLine.show()
-		pass
+		saveLoadList.deselect_all()
+		loadLine.grab_focus()
+		return
 
 func _on_load_line_text_submitted(load_text: String) -> void:
+	removeOldInputBox()
 	if load_text:
 		loadStats(load_text)
+
+func slPopupFunc():
+	pass

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dut5drsd0b8sj" path="res://rewrite/calc_rewrite.gd" id="1_3wlo8"]
 
-[node name="calcRewrite" type="Control" node_paths=PackedStringArray("versionLabel", "fertilityDifferenceLabel", "maximumFertilityLabel", "typeMenu", "seedsMenu", "seedNameList", "seedAmountList", "resetSafetyButton", "resetButton", "loadLine", "saveLoadList")]
+[node name="calcRewrite" type="Control" node_paths=PackedStringArray("versionLabel", "fertilityDifferenceLabel", "maximumFertilityLabel", "typeMenu", "seedsMenu", "seedNameList", "seedAmountList", "resetSafetyButton", "resetButton", "loadLine", "saveLoadList", "slPopupParent")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -23,6 +23,7 @@ resetSafetyButton = NodePath("Control/ResetSafety")
 resetButton = NodePath("Control/ResetButton")
 loadLine = NodePath("Control/LoadLine")
 saveLoadList = NodePath("Control/SaveLoadList")
+slPopupParent = NodePath("Control/slPopup")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 1
@@ -152,6 +153,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Seed Types       Seeds                                                                   Current Seeds        Amounts"
 
 [node name="LoadLine" type="LineEdit" parent="Control"]
+visible = false
 layout_mode = 0
 offset_left = -48.0
 offset_top = 258.0
@@ -169,6 +171,13 @@ auto_height = true
 item_count = 2
 item_0/text = "Save"
 item_1/text = "Load"
+
+[node name="slPopup" type="Control" parent="Control"]
+anchors_preset = 0
+offset_left = -52.0
+offset_top = 215.0
+offset_right = -12.0
+offset_bottom = 255.0
 
 [node name="maxFertSpinBox" type="SpinBox" parent="."]
 layout_mode = 0
