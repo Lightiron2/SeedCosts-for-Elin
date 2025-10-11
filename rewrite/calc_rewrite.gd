@@ -1,5 +1,12 @@
 extends Control
 
+#reset button
+#save and load system
+#labels and setting for fertility
+#ui work
+
+#int instead of array copy
+
 var versionName: String = "Version: Rewrite 0.1"
 var version: float = 0.1
 @export var versionLabel: Label
@@ -30,6 +37,16 @@ var swapTargetIndex: int = -1
 var swapTargetArray: Array = []
 var swapOriginArray: Array = []
 
+var resetAble:bool = false
+
+const seedNameArray: Array[String] = ["Cotton", "Normal", "Blue", "White", "Yellow", "Apple", "Banana",
+ "Berry", "Cactus", "Grape", "Orange", "Palulu", "Pear", "Rainbow", "Weed", "Cattail", "Green", "Purple",
+ "Red", "Tobacc", "Mushroom", "Api", "Coffee", "Crim", "Rafflesia", "Fern", "Pasture", "Silver",
+ "Rice", "Wheat", "Birch", "Cedar", "Cherry", "Christmas", "Coral", "Feywood", "Fir", "Mushroom Tree",
+ "Mahogany", "Oak", "Pine", "Rosewood"]
+
+const typeNameArray: Array[String] = ["Fiber","Flowers","Fruit","Grass","Herb","Mushroom","Nuts","Ornamental",
+	"Pasture","Straw","Trees","Vegetable",]
 
 const staticTestDic: Dictionary = {
 	"Fiber" = Fiber, "Flowers" = Flowers,"Fruit" = Fruit,"Grass" = Grass,"Herb" = Herb,
@@ -38,8 +55,6 @@ const staticTestDic: Dictionary = {
 }
 var testDic: Dictionary = {}
 
-const typeNameArray: Array[String] = ["Fiber","Flowers","Fruit","Grass","Herb","Mushroom","Nuts","Ornamental",
-	"Pasture","Straw","Trees","Vegetable",]
 var menuTypeName: String = "No Target"
 var seedName: String = "No Target"
 var typeId: int = -1
@@ -50,6 +65,7 @@ var seedCheckerIndex: int = -1
 var maxFertility: float = 120.0:
 	set(newCost):
 		maxFertility = newCost
+		maximumFertilityLabel.text = str(int(maxFertility))
 		updateFertilityLabels()
 var fertilityCost: float = 0.0:
 	set(newCost):
@@ -57,11 +73,18 @@ var fertilityCost: float = 0.0:
 		updateFertilityLabels()
 
 @export var fertilityDifferenceLabel: Label
+@export var maximumFertilityLabel: Label
 
 @export var typeMenu: ItemList
 @export var seedsMenu: ItemList
 @export var seedNameList: ItemList
 @export var seedAmountList: ItemList
+
+@export var resetSafetyButton: CheckButton
+@export var resetButton: Button
+
+@export var loadLine: LineEdit
+@export var saveLoadList: ItemList
 
 var inputBox: SpinBox = null
 
@@ -71,8 +94,17 @@ func _ready() -> void:
 		typeMenu.add_item(key,null,true)
 	if versionLabel:
 		versionLabel.text = versionName
+	updateFertilityLabels()
+	
+	var tstar: Array[int] = [1,5,100,3,2,3,1,1,222,3,7,11,1,1,1,1,1,1,11,1,1]
+	var vit: String = str(tstar)
+	print(vit)
+	DisplayServer.clipboard_set(vit)
+	var tit: Array = vit.split(",",false)
+	print(tit)
+	print(tit.size())
 
-#not tested
+
 func _on_type_menu_item_selected(index: int) -> void:
 	menuTypeName = typeNameArray[index]
 	deselectAll()
@@ -83,8 +115,9 @@ func _on_type_menu_item_selected(index: int) -> void:
 	for key in staticTestDic[menuTypeName]:
 		seedsMenu.add_item(key,null,true)
 	removeOldInputBox()
-#not tested
+
 func _on_seed_menu_item_selected(index: int) -> void:
+	seedAmountList.deselect_all()
 	editingValue = false
 	amount = 0.0
 	removeOldInputBox()
@@ -101,8 +134,10 @@ func _on_seed_menu_item_selected(index: int) -> void:
 	else:
 		amount = currentSeeds[seedCheckerIndex]["Amount"]
 	createInputBox(amount)
-#maybe done, not tested
+
 func _on_current_seeds_item_selected(index: int) -> void:
+	seedAmountList.deselect_all()
+	seedsMenu.deselect_all()
 	removeOldInputBox()
 	editingValue = false
 	if swapping == true:
@@ -112,8 +147,10 @@ func _on_current_seeds_item_selected(index: int) -> void:
 		return
 	swapOriginIndex = index
 	swapping = true
-#not tested
+
 func _on_seed_ammount_item_selected(index: int) -> void:
+	seedsMenu.deselect_all()
+	seedNameList.deselect_all()
 	removeOldInputBox()
 	editingValue = true
 	swapping = false
@@ -186,7 +223,7 @@ func removeFromDicAndArray(index: int):
 			currentSeeds.remove_at(index)
 	editingValue = false
 	pass
-func swapItem(index: int):
+func swapItem(_index: int):
 	#works for internal swapping. no need for anything else for internal swap.
 	if swappingSelfContained:
 		var ins:int = 0
@@ -202,7 +239,6 @@ func swapItem(index: int):
 		updateItemLists(-1)
 		return
 	if swapping:
-		var tempName: String = seedNameList.get_item_text(swapOriginIndex)
 		var tempAmount: float = currentSeeds[swapOriginIndex]["Amount"]
 		addToDicAndArray(menuTypeName,seedName,tempAmount)
 		removeFromDicAndArray(swapOriginIndex)
@@ -304,4 +340,109 @@ func resetSwapping():
 	swapTargetIndex = -1
 	swapOriginIndex = -1
 	deselectAll()
-	pass
+
+func resetting(ableToReset: bool):
+	if ableToReset:
+		addingFromSeedMenu = false
+		editingValue = false
+		swappingSelfContained = false
+		swapping = false
+		swapOriginIndex = -1
+		swapTargetIndex = -1
+		swapTargetArray.clear()
+		swapOriginArray.clear()
+		testDic.clear()
+		menuTypeName = "No Target"
+		seedName = "No Target"
+		typeId = -1
+		currentSeeds.clear()
+		amount = 0.0
+		seedCheckerIndex = -1
+		seedNameList.clear()
+		seedAmountList.clear()
+		seedsMenu.clear()
+		fertilityCost = 0
+		deselectAll()
+		typeMenu.deselect_all()
+		removeOldInputBox()
+		resetAble = false
+		resetSafetyButton.set_toggle_mode(false)
+		resetButton.release_focus()
+		return
+
+func _on_reset_safety_toggled(toggled_on: bool) -> void:
+	resetAble = toggled_on
+
+func _on_reset_button_button_up() -> void:
+	resetting(resetAble)
+
+func _on_max_fert_spin_box_value_changed(value: float) -> void:
+	maxFertility = value
+
+func loadStats(loadString: String):
+	var vas = JSON.new()
+	var error = vas.parse(loadString)
+	var vit: Array[float]
+	var i: int = 0
+	if error != 0:
+		loadLine.clear()
+		return
+	var tA = JSON.parse_string(loadString)
+	if tA is not Array:
+		loadLine.clear()
+		return
+	var tas = tA.size()
+	if tas % 3 != 0:
+		loadLine.clear()
+		return
+	for item in tA:
+		if item is not float:
+			loadLine.clear()
+			return
+	while i < tas:
+		vit.append(clampf(tA[i],1.0,10000.0))
+		i += 1
+	print(vit," this one")
+	var tempTypeId: int = 0
+	var tempNameId: int = 1
+	var tempAmountId: int = 2
+	var iterations: int = tas / 3
+	var currentIteration: int = 0
+	while currentIteration < iterations:
+		var tempType: String = typeNameArray[int(vit[tempTypeId])]
+		var tempSeed: String = seedNameArray[int(vit[tempNameId])]
+		var tempAmount: float = vit[tempAmountId]
+		addToDicAndArray(tempType,tempSeed,tempAmount)
+		tempTypeId += 3
+		tempNameId += 3
+		tempAmountId += 3
+		currentIteration += 1
+		pass
+	calculateCost()
+	#typeint, seedint, amountint, 0,1,2, += 3
+	loadLine.clear()
+	loadLine.hide()
+
+func saveStats():
+	removeOldInputBox()
+	var temp = JSON.from_native(currentSeeds, false)
+	var t = JSON.stringify(temp,"",false,true)
+	print(JSON.to_native(temp), ": this")
+	print(t)
+	DisplayServer.clipboard_set(t)
+	saveLoadList.release_focus()
+
+func _on_save_load_list_item_selected(index: int) -> void:
+	var tempString: String = saveLoadList.get_item_text(index)
+	if tempString == "Save":
+		if currentSeeds:
+			saveStats()
+		saveLoadList.deselect_all()
+	if tempString == "Load":
+		loadLine.clear()
+		loadLine.show()
+		pass
+
+func _on_load_line_text_submitted(load_text: String) -> void:
+	if load_text:
+		loadStats(load_text)

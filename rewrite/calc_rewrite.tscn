@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dut5drsd0b8sj" path="res://rewrite/calc_rewrite.gd" id="1_3wlo8"]
 
-[node name="calcRewrite" type="Control" node_paths=PackedStringArray("versionLabel", "fertilityDifferenceLabel", "typeMenu", "seedsMenu", "seedNameList", "seedAmountList")]
+[node name="calcRewrite" type="Control" node_paths=PackedStringArray("versionLabel", "fertilityDifferenceLabel", "maximumFertilityLabel", "typeMenu", "seedsMenu", "seedNameList", "seedAmountList", "resetSafetyButton", "resetButton", "loadLine", "saveLoadList")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,11 +13,16 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("1_3wlo8")
 versionLabel = NodePath("Control/VersionLabel")
-fertilityDifferenceLabel = NodePath("Control/Label")
+fertilityDifferenceLabel = NodePath("Control/FertLabels/used/FertilityDiffrence")
+maximumFertilityLabel = NodePath("Control/FertLabels/max/MaxFertility")
 typeMenu = NodePath("Control/TypeMenu")
 seedsMenu = NodePath("Control/SeedMenu")
 seedNameList = NodePath("Control/seedNameList")
 seedAmountList = NodePath("Control/seedAmountList")
+resetSafetyButton = NodePath("Control/ResetSafety")
+resetButton = NodePath("Control/ResetButton")
+loadLine = NodePath("Control/LoadLine")
+saveLoadList = NodePath("Control/SaveLoadList")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 1
@@ -35,62 +40,152 @@ grow_vertical = 2
 
 [node name="TypeMenu" type="ItemList" parent="Control"]
 layout_mode = 0
-offset_left = -322.0
-offset_top = -249.0
-offset_right = -282.0
-offset_bottom = -209.0
+offset_left = -336.0
+offset_top = -239.0
+offset_right = -296.0
+offset_bottom = -199.0
 auto_width = true
 auto_height = true
 
 [node name="SeedMenu" type="ItemList" parent="Control"]
 layout_mode = 0
-offset_left = -137.0
-offset_top = -243.0
-offset_right = -97.0
-offset_bottom = -203.0
+offset_left = -221.0
+offset_top = -239.0
+offset_right = -181.0
+offset_bottom = -199.0
 auto_width = true
 auto_height = true
 max_columns = 3
+same_column_width = true
+fixed_column_width = 100
 
 [node name="seedNameList" type="ItemList" parent="Control"]
 layout_mode = 0
-offset_left = 113.0
-offset_top = -244.0
-offset_right = 153.0
-offset_bottom = -204.0
+offset_left = 104.0
+offset_top = -239.0
+offset_right = 144.0
+offset_bottom = -199.0
 auto_width = true
 auto_height = true
 
 [node name="seedAmountList" type="ItemList" parent="Control"]
 layout_mode = 0
-offset_left = 280.0
-offset_top = -243.0
-offset_right = 320.0
-offset_bottom = -203.0
+offset_left = 246.0
+offset_top = -239.0
+offset_right = 286.0
+offset_bottom = -199.0
 auto_width = true
 auto_height = true
 
-[node name="Label" type="Label" parent="Control"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-
 [node name="VersionLabel" type="Label" parent="Control"]
 layout_mode = 0
-offset_left = -321.0
-offset_top = 237.0
-offset_right = -281.0
-offset_bottom = 260.0
+offset_left = -333.0
+offset_top = 221.0
+offset_right = -224.0
+offset_bottom = 244.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Version Label."
 
-[node name="SpinBox" type="SpinBox" parent="."]
+[node name="ResetSafety" type="CheckButton" parent="Control"]
 layout_mode = 0
-offset_left = 55.0
-offset_top = 412.0
-offset_right = 141.563
-offset_bottom = 443.0
+offset_left = -336.0
+offset_top = 242.0
+offset_right = -240.0
+offset_bottom = 273.0
+text = "Safety"
+
+[node name="ResetButton" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = -286.0
+offset_top = 273.0
+offset_right = -235.0
+offset_bottom = 304.0
+text = "Reset"
+
+[node name="FertLabels" type="Control" parent="Control"]
+anchors_preset = 0
+offset_left = -329.0
+offset_top = 158.0
+offset_right = -289.0
+offset_bottom = 198.0
+
+[node name="used" type="Label" parent="Control/FertLabels"]
+layout_mode = 0
+offset_top = -15.0
+offset_right = 75.0
+offset_bottom = 8.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Available:"
+
+[node name="FertilityDiffrence" type="Label" parent="Control/FertLabels/used"]
+layout_mode = 0
+offset_left = 75.0
+offset_right = 115.0
+offset_bottom = 23.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "111"
+
+[node name="max" type="Label" parent="Control/FertLabels"]
+layout_mode = 0
+offset_left = -8.0
+offset_top = 16.0
+offset_right = 75.0
+offset_bottom = 39.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Maximum:"
+
+[node name="MaxFertility" type="Label" parent="Control/FertLabels/max"]
+layout_mode = 0
+offset_left = 83.0
+offset_right = 123.0
+offset_bottom = 23.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "120"
+
+[node name="MenuNamesLabel" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = -336.0
+offset_top = -264.0
+offset_right = -296.0
+offset_bottom = -241.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Seed Types       Seeds                                                                   Current Seeds        Amounts"
+
+[node name="LoadLine" type="LineEdit" parent="Control"]
+layout_mode = 0
+offset_left = -48.0
+offset_top = 258.0
+offset_right = 20.5625
+offset_bottom = 289.0
+
+[node name="SaveLoadList" type="ItemList" parent="Control"]
+layout_mode = 0
+offset_left = -109.0
+offset_top = 241.0
+offset_right = -59.0
+offset_bottom = 303.0
+auto_width = true
+auto_height = true
+item_count = 2
+item_0/text = "Save"
+item_1/text = "Load"
+
+[node name="maxFertSpinBox" type="SpinBox" parent="."]
+layout_mode = 0
+offset_left = 136.0
+offset_top = 438.0
+offset_right = 222.563
+offset_bottom = 469.0
+max_value = 10000.0
+value = 120.0
+rounded = true
 
 [connection signal="item_selected" from="Control/TypeMenu" to="." method="_on_type_menu_item_selected"]
 [connection signal="item_selected" from="Control/SeedMenu" to="." method="_on_seed_menu_item_selected"]
 [connection signal="item_selected" from="Control/seedNameList" to="." method="_on_current_seeds_item_selected"]
 [connection signal="item_selected" from="Control/seedAmountList" to="." method="_on_seed_ammount_item_selected"]
+[connection signal="toggled" from="Control/ResetSafety" to="." method="_on_reset_safety_toggled"]
+[connection signal="button_up" from="Control/ResetButton" to="." method="_on_reset_button_button_up"]
+[connection signal="text_submitted" from="Control/LoadLine" to="." method="_on_load_line_text_submitted"]
+[connection signal="item_selected" from="Control/SaveLoadList" to="." method="_on_save_load_list_item_selected"]
+[connection signal="value_changed" from="maxFertSpinBox" to="." method="_on_max_fert_spin_box_value_changed"]
