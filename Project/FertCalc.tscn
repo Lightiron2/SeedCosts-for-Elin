@@ -154,6 +154,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Seed Types       Seeds                                                                   Current Seeds        Amounts"
 
 [node name="LoadLine" type="LineEdit" parent="Control"]
+visible = false
 layout_mode = 0
 offset_left = -48.0
 offset_top = 258.0
@@ -161,6 +162,15 @@ offset_right = 20.5625
 offset_bottom = 289.0
 emoji_menu_enabled = false
 clear_button_enabled = true
+
+[node name="Label" type="Label" parent="Control/LoadLine"]
+layout_mode = 0
+offset_left = 89.0
+offset_top = 4.0
+offset_right = 209.0
+offset_bottom = 27.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Use Entry key to submit save info."
 
 [node name="SaveLoadList" type="ItemList" parent="Control"]
 layout_mode = 0

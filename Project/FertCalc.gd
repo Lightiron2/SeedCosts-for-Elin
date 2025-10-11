@@ -12,11 +12,13 @@ var version: float = 1.0
 @export var versionLabel: Label
 
 const Fiber: Dictionary = {"Cotton" = 2.0}
-const Flowers: Dictionary = {"Normal" = 1.0,"Blue" = 1.0,"White" = 1.0,"Yellow" = 1.0}
+const Flowers: Dictionary = {"Normal Flower" = 1.0,"Blue Flower" = 1.0,"White Flower" = 1.0,
+"Yellow Flower" = 1.0}
 const Fruit: Dictionary = {"Apple" = 3.0,"Banana" = 2.0,"Berry" = 1.0,"Cactus" = 3.0,"Grape" = 5.0,
 "Orange" = 3.0,"Palulu" = 2.0,"Pear" = 3.0,"Rainbow" = 8.0}
 const Grass: Dictionary = {"Weed" = 1.0,"Cattail" = 1.0}
-const Herb: Dictionary = {"Blue" = 2.0, "Green" = 2.0,"Purple" = 2.0,"Red" = 2.0,"Tobacc" = 6.0}
+const Herb: Dictionary = {"Blue Herb" = 2.0, "Green Herb" = 2.0,"Purple Herb" = 2.0,"Red Herb" = 2.0,
+"Tobacc" = 6.0}
 const Mushroom: Dictionary = {"Mushroom" = 2.0}
 const Nuts: Dictionary = {"Api" = 2.0,"Coffee" = 4.0,"Crim" = 2.0}
 const Ornamental: Dictionary = {"Rafflesia" = 0.0,"Fern" = 0.0}
@@ -39,12 +41,12 @@ var swapOriginArray: Array = []
 
 var resetAble:bool = false
 
-const seedNameArray: Array[String] = ["Cotton", "Normal", "Blue", "White", "Yellow", "Apple", "Banana",
- "Berry", "Cactus", "Grape", "Orange", "Palulu", "Pear", "Rainbow", "Weed", "Cattail", "Green", "Purple",
- "Red", "Tobacc", "Mushroom", "Api", "Coffee", "Crim", "Rafflesia", "Fern", "Pasture", "Silver",
- "Rice", "Wheat", "Birch", "Cedar", "Cherry", "Christmas", "Coral", "Feywood", "Fir", "Mushroom Tree",
- "Mahogany", "Oak", "Pine", "Rosewood","Bamboo","Cabbage","Cabocchi","Carrot","Corn","Imo","Radish",
- "SeaweedDeep","Tomato"]
+const seedNameArray: Array[String] = ["Cotton", "Normal Flower", "Blue Flower", "White Flower",
+ "Yellow Flower", "Apple", "Banana", "Berry", "Cactus", "Grape", "Orange", "Palulu", "Pear", "Rainbow",
+ "Weed", "Cattail","Blue Herb","Green Herb", "Purple Herb","Red Herb", "Tobacc", "Mushroom", "Api",
+ "Coffee", "Crim", "Rafflesia", "Fern", "Pasture", "Silver","Rice", "Wheat", "Birch", "Cedar", "Cherry",
+"Christmas", "Coral", "Feywood", "Fir", "Mushroom Tree","Mahogany", "Oak", "Pine","Rosewood","Bamboo",
+"Cabbage","Cabocchi","Carrot","Corn","Imo","Radish","SeaweedDeep","Tomato"]
 
 const typeNameArray: Array[String] = ["Fiber","Flowers","Fruit","Grass","Herb","Mushroom","Nuts","Ornamental",
 	"Pasture","Straw","Trees","Vegetable",]
@@ -93,6 +95,7 @@ var inputBox: SpinBox = null
 var slPopup: Label = null
 
 func _ready() -> void:
+	closeLoadWin()
 	typeMenu.clear()
 	for key in typeNameArray:
 		typeMenu.add_item(key,null,true)
@@ -102,6 +105,7 @@ func _ready() -> void:
 
 
 func _on_type_menu_item_selected(index: int) -> void:
+	closeLoadWin()
 	menuTypeName = typeNameArray[index]
 	deselectAll()
 	typeId = index
@@ -113,6 +117,7 @@ func _on_type_menu_item_selected(index: int) -> void:
 	removeOldInputBox()
 
 func _on_seed_menu_item_selected(index: int) -> void:
+	closeLoadWin()
 	seedAmountList.deselect_all()
 	editingValue = false
 	amount = 0.0
@@ -132,6 +137,7 @@ func _on_seed_menu_item_selected(index: int) -> void:
 	createInputBox(amount)
 
 func _on_current_seeds_item_selected(index: int) -> void:
+	closeLoadWin()
 	seedAmountList.deselect_all()
 	seedsMenu.deselect_all()
 	removeOldInputBox()
@@ -145,6 +151,7 @@ func _on_current_seeds_item_selected(index: int) -> void:
 	swapping = true
 
 func _on_seed_ammount_item_selected(index: int) -> void:
+	closeLoadWin()
 	seedsMenu.deselect_all()
 	seedNameList.deselect_all()
 	removeOldInputBox()
@@ -360,6 +367,7 @@ func resetting(ableToReset: bool):
 		resetAble = false
 		resetSafetyButton.button_pressed = false
 		resetButton.release_focus()
+		closeLoadWin()
 		return
 
 func _on_reset_safety_toggled(toggled_on: bool) -> void:
@@ -407,21 +415,35 @@ func loadStats(loadString: String):
 	var tempAmountId: int = 2
 	var iterations: int = tas / 3
 	var currentIteration: int = 0
+	var tNAS = typeNameArray.size() - 1
+	var sNAS = seedNameArray.size() - 1
 	#typeint, seedint, amountint, 0,1,2, += 3
+	var typeExist: bool = false
+	var seedExist: bool = false
 	while currentIteration < iterations:
-		var tempType: String = typeNameArray[int(vit[tempTypeId])]
-		var tempSeed: String = seedNameArray[int(vit[tempNameId])]
+		var saveTypeInt = int(vit[tempTypeId])
+		var saveNameInt = int(vit[tempNameId])
 		var tempAmount: float = vit[tempAmountId]
-		if staticTestDic.has(tempType):
-			if staticTestDic[tempType].has(tempSeed):
-				addToDicAndArray(tempType,tempSeed,tempAmount)
+		var tempType: String
+		var tempSeed: String
+		if saveTypeInt <= tNAS:
+			tempType = typeNameArray[saveTypeInt]
+			typeExist = true
+		if saveNameInt <=sNAS:
+			tempSeed = seedNameArray[saveNameInt]
+			seedExist = true
+		if typeExist && seedExist:
+			if staticTestDic.has(tempType):
+				if staticTestDic[tempType].has(tempSeed):
+					addToDicAndArray(tempType,tempSeed,tempAmount)
 		tempTypeId += 3
 		tempNameId += 3
 		tempAmountId += 3
+		typeExist = false
+		seedExist = false
 		currentIteration += 1
 	calculateCost()
-	loadLine.clear()
-	loadLine.hide()
+	closeLoadWin()
 	slPopupFunc("Loaded", 1.5)
 
 func saveStats():
@@ -457,6 +479,7 @@ func _on_save_load_list_item_selected(index: int) -> void:
 	removeOldInputBox()
 	var tempString: String = saveLoadList.get_item_text(index)
 	if tempString == "Save":
+		closeLoadWin()
 		if currentSeeds:
 			saveStats()
 		saveLoadList.deselect_all()
@@ -491,3 +514,8 @@ func slTimer(time: float):
 func _on_sl_popup_timer_timeout() -> void:
 	if slPopup:
 		slPopup.queue_free()
+
+func closeLoadWin():
+	if loadLine.visible == true:
+		loadLine.clear()
+		loadLine.hide()
