@@ -398,15 +398,18 @@ func loadStats(loadString: String):
 		loadLine.clear()
 		slPopupFunc("Wrong amount of items, not divisable by 3.", 1.5)
 		return
+	for item in tA:
+		if item is not float:
+			loadLine.clear()
+			slPopupFunc("One or more items are not numbers. e.g 1.0, 1.1, 2.5", 1.5)
+			return
+		if item < 0.0:
+			loadLine.clear()
+			slPopupFunc("One of the values is negative.",1.5)
 	currentSeeds.clear()
 	testDic.clear()
 	seedNameList.clear()
 	seedAmountList.clear()
-	for item in tA:
-		if item is not float:
-			loadLine.clear()
-			slPopupFunc("One or more items are not floats. e.g 1.0, 1.1, 2.5", 1.5)
-			return
 	while i < tas:
 		vit.append(clampf(tA[i],1.0,10000.0))
 		i += 1
@@ -426,16 +429,17 @@ func loadStats(loadString: String):
 		var tempAmount: float = vit[tempAmountId]
 		var tempType: String
 		var tempSeed: String
-		if saveTypeInt <= tNAS:
-			tempType = typeNameArray[saveTypeInt]
-			typeExist = true
-		if saveNameInt <=sNAS:
-			tempSeed = seedNameArray[saveNameInt]
-			seedExist = true
-		if typeExist && seedExist:
-			if staticTestDic.has(tempType):
-				if staticTestDic[tempType].has(tempSeed):
-					addToDicAndArray(tempType,tempSeed,tempAmount)
+		if tempAmount >= 1.0:
+			if saveTypeInt <= tNAS:
+				tempType = typeNameArray[saveTypeInt]
+				typeExist = true
+			if saveNameInt <=sNAS:
+				tempSeed = seedNameArray[saveNameInt]
+				seedExist = true
+			if typeExist && seedExist:
+				if staticTestDic.has(tempType):
+					if staticTestDic[tempType].has(tempSeed):
+						addToDicAndArray(tempType,tempSeed,tempAmount)
 		tempTypeId += 3
 		tempNameId += 3
 		tempAmountId += 3
