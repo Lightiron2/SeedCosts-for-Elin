@@ -94,13 +94,13 @@ offset_left = -336.0
 offset_top = 242.0
 offset_right = -240.0
 offset_bottom = 273.0
-text = "Safety"
+text = "Reset Safety"
 
 [node name="ResetButton" type="Button" parent="Control"]
 layout_mode = 0
-offset_left = -286.0
+offset_left = -243.0
 offset_top = 273.0
-offset_right = -235.0
+offset_right = -192.0
 offset_bottom = 304.0
 text = "Reset"
 
@@ -113,16 +113,17 @@ offset_bottom = 198.0
 
 [node name="used" type="Label" parent="Control/FertLabels"]
 layout_mode = 0
+offset_left = -7.0
 offset_top = -15.0
-offset_right = 75.0
+offset_right = 68.0
 offset_bottom = 8.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Available:"
 
 [node name="FertilityDiffrence" type="Label" parent="Control/FertLabels/used"]
 layout_mode = 0
-offset_left = 75.0
-offset_right = 115.0
+offset_left = 83.0
+offset_right = 123.0
 offset_bottom = 23.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "111"
@@ -143,6 +144,15 @@ offset_right = 123.0
 offset_bottom = 23.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "120"
+
+[node name="Label" type="Label" parent="Control/FertLabels"]
+layout_mode = 0
+offset_left = -7.0
+offset_top = -40.0
+offset_right = 53.0
+offset_bottom = -17.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Fertility"
 
 [node name="MenuNamesLabel" type="Label" parent="Control"]
 layout_mode = 0
