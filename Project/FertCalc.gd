@@ -401,7 +401,7 @@ func loadStats(loadString: String):
 	for item in tA:
 		if item is not float:
 			loadLine.clear()
-			slPopupFunc("One or more items are not numbers. e.g 1.0, 1.1, 2.5", 1.5)
+			slPopupFunc("One or more items are not float numbers. e.g 1.0, 1.1, 2.5", 1.5)
 			return
 		if item < 0.0:
 			loadLine.clear()
