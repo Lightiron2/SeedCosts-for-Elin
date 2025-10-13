@@ -2,8 +2,22 @@
 
 [ext_resource type="Script" uid="uid://dut5drsd0b8sj" path="res://Project/FertCalc.gd" id="1_fb3st"]
 
-[node name="FertCalc" type="Control" node_paths=PackedStringArray("versionLabel", "fertilityDifferenceLabel", "maximumFertilityLabel", "typeMenu", "seedsMenu", "seedNameList", "seedAmountList", "resetSafetyButton", "resetButton", "loadLine", "saveLoadList", "slPopupParent", "slPopupTimer")]
+[node name="Control" type="Control"]
 layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -360.0
+offset_top = -288.0
+offset_right = -360.0
+offset_bottom = -288.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FertCalc" type="Control" parent="." node_paths=PackedStringArray("versionLabel", "fertilityDifferenceLabel", "maximumFertilityLabel", "typeMenu", "seedsMenu", "seedNameList", "seedAmountList", "resetSafetyButton", "resetButton", "loadLine", "saveLoadList", "slPopupParent", "slPopupTimer")]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -12,106 +26,92 @@ grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("1_fb3st")
-versionLabel = NodePath("Control/VersionLabel")
-fertilityDifferenceLabel = NodePath("Control/FertLabels/used/FertilityDiffrence")
-maximumFertilityLabel = NodePath("Control/FertLabels/max/MaxFertility")
-typeMenu = NodePath("Control/TypeMenu")
-seedsMenu = NodePath("Control/SeedMenu")
-seedNameList = NodePath("Control/seedNameList")
-seedAmountList = NodePath("Control/seedAmountList")
-resetSafetyButton = NodePath("Control/ResetSafety")
-resetButton = NodePath("Control/ResetButton")
-loadLine = NodePath("Control/LoadLine")
-saveLoadList = NodePath("Control/SaveLoadList")
-slPopupParent = NodePath("Control/slPopup")
-slPopupTimer = NodePath("Control/slPopupTimer")
+versionLabel = NodePath("VersionLabel")
+fertilityDifferenceLabel = NodePath("FertLabels/used/FertilityDiffrence")
+maximumFertilityLabel = NodePath("FertLabels/max/MaxFertility")
+typeMenu = NodePath("TypeMenu")
+seedsMenu = NodePath("SeedMenu")
+seedNameList = NodePath("seedNameList")
+seedAmountList = NodePath("seedAmountList")
+resetSafetyButton = NodePath("ResetSafety")
+resetButton = NodePath("ResetButton")
+loadLine = NodePath("LoadLine")
+saveLoadList = NodePath("SaveLoadList")
+slPopupParent = NodePath("slPopup")
+slPopupTimer = NodePath("slPopupTimer")
 
-[node name="Control" type="Control" parent="."]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="TypeMenu" type="ItemList" parent="Control"]
+[node name="TypeMenu" type="ItemList" parent="FertCalc"]
 layout_mode = 0
-offset_left = -336.0
-offset_top = -239.0
-offset_right = -296.0
-offset_bottom = -199.0
+offset_left = 4.0
+offset_top = 29.0
+offset_right = 44.0
+offset_bottom = 69.0
 auto_width = true
 auto_height = true
 
-[node name="SeedMenu" type="ItemList" parent="Control"]
+[node name="SeedMenu" type="ItemList" parent="FertCalc"]
 layout_mode = 0
-offset_left = -221.0
-offset_top = -239.0
-offset_right = -181.0
-offset_bottom = -199.0
+offset_left = 119.0
+offset_top = 29.0
+offset_right = 159.0
+offset_bottom = 69.0
 auto_width = true
 auto_height = true
 max_columns = 3
 same_column_width = true
 fixed_column_width = 100
 
-[node name="seedNameList" type="ItemList" parent="Control"]
+[node name="seedNameList" type="ItemList" parent="FertCalc"]
 layout_mode = 0
-offset_left = 104.0
-offset_top = -239.0
-offset_right = 144.0
-offset_bottom = -199.0
+offset_left = 444.0
+offset_top = 29.0
+offset_right = 484.0
+offset_bottom = 69.0
 auto_width = true
 auto_height = true
 
-[node name="seedAmountList" type="ItemList" parent="Control"]
+[node name="seedAmountList" type="ItemList" parent="FertCalc"]
 layout_mode = 0
-offset_left = 246.0
-offset_top = -239.0
-offset_right = 286.0
-offset_bottom = -199.0
+offset_left = 586.0
+offset_top = 29.0
+offset_right = 626.0
+offset_bottom = 69.0
 auto_width = true
 auto_height = true
 
-[node name="VersionLabel" type="Label" parent="Control"]
+[node name="VersionLabel" type="Label" parent="FertCalc"]
 layout_mode = 0
-offset_left = -333.0
-offset_top = 221.0
-offset_right = -224.0
-offset_bottom = 244.0
+offset_left = 7.0
+offset_top = 489.0
+offset_right = 116.0
+offset_bottom = 512.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Version Label."
 
-[node name="ResetSafety" type="CheckButton" parent="Control"]
+[node name="ResetSafety" type="CheckButton" parent="FertCalc"]
 layout_mode = 0
-offset_left = -336.0
-offset_top = 242.0
-offset_right = -240.0
-offset_bottom = 273.0
+offset_left = 4.0
+offset_top = 510.0
+offset_right = 147.0
+offset_bottom = 541.0
 text = "Reset Safety"
 
-[node name="ResetButton" type="Button" parent="Control"]
+[node name="ResetButton" type="Button" parent="FertCalc"]
 layout_mode = 0
-offset_left = -243.0
-offset_top = 273.0
-offset_right = -192.0
-offset_bottom = 304.0
+offset_left = 97.0
+offset_top = 541.0
+offset_right = 148.0
+offset_bottom = 572.0
 text = "Reset"
 
-[node name="FertLabels" type="Control" parent="Control"]
+[node name="FertLabels" type="Control" parent="FertCalc"]
 anchors_preset = 0
-offset_left = -329.0
-offset_top = 158.0
-offset_right = -289.0
-offset_bottom = 198.0
+offset_left = 11.0
+offset_top = 426.0
+offset_right = 51.0
+offset_bottom = 466.0
 
-[node name="used" type="Label" parent="Control/FertLabels"]
+[node name="used" type="Label" parent="FertCalc/FertLabels"]
 layout_mode = 0
 offset_left = -7.0
 offset_top = -15.0
@@ -120,7 +120,7 @@ offset_bottom = 8.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Available:"
 
-[node name="FertilityDiffrence" type="Label" parent="Control/FertLabels/used"]
+[node name="FertilityDiffrence" type="Label" parent="FertCalc/FertLabels/used"]
 layout_mode = 0
 offset_left = 83.0
 offset_right = 123.0
@@ -128,7 +128,7 @@ offset_bottom = 23.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "111"
 
-[node name="max" type="Label" parent="Control/FertLabels"]
+[node name="max" type="Label" parent="FertCalc/FertLabels"]
 layout_mode = 0
 offset_left = -8.0
 offset_top = 16.0
@@ -137,7 +137,7 @@ offset_bottom = 39.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Maximum:"
 
-[node name="MaxFertility" type="Label" parent="Control/FertLabels/max"]
+[node name="MaxFertility" type="Label" parent="FertCalc/FertLabels/max"]
 layout_mode = 0
 offset_left = 83.0
 offset_right = 123.0
@@ -145,7 +145,7 @@ offset_bottom = 23.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "120"
 
-[node name="Label" type="Label" parent="Control/FertLabels"]
+[node name="Label" type="Label" parent="FertCalc/FertLabels"]
 layout_mode = 0
 offset_left = -7.0
 offset_top = -40.0
@@ -154,26 +154,26 @@ offset_bottom = -17.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Fertility"
 
-[node name="MenuNamesLabel" type="Label" parent="Control"]
+[node name="MenuNamesLabel" type="Label" parent="FertCalc"]
 layout_mode = 0
-offset_left = -336.0
-offset_top = -264.0
-offset_right = -296.0
-offset_bottom = -241.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 655.0
+offset_bottom = 27.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Seed Types       Seeds                                                                   Current Seeds        Amounts"
 
-[node name="LoadLine" type="LineEdit" parent="Control"]
+[node name="LoadLine" type="LineEdit" parent="FertCalc"]
 visible = false
 layout_mode = 0
-offset_left = -48.0
-offset_top = 258.0
-offset_right = 20.5625
-offset_bottom = 289.0
+offset_left = 292.0
+offset_top = 526.0
+offset_right = 376.563
+offset_bottom = 557.0
 emoji_menu_enabled = false
 clear_button_enabled = true
 
-[node name="Label" type="Label" parent="Control/LoadLine"]
+[node name="Label" type="Label" parent="FertCalc/LoadLine"]
 layout_mode = 0
 offset_left = 89.0
 offset_top = 4.0
@@ -182,29 +182,29 @@ offset_bottom = 27.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Use Entry key to submit save info."
 
-[node name="SaveLoadList" type="ItemList" parent="Control"]
+[node name="SaveLoadList" type="ItemList" parent="FertCalc"]
 layout_mode = 0
-offset_left = -109.0
-offset_top = 241.0
-offset_right = -59.0
-offset_bottom = 303.0
+offset_left = 231.0
+offset_top = 509.0
+offset_right = 281.0
+offset_bottom = 571.0
 auto_width = true
 auto_height = true
 item_count = 2
 item_0/text = "Save"
 item_1/text = "Load"
 
-[node name="slPopup" type="Control" parent="Control"]
+[node name="slPopup" type="Control" parent="FertCalc"]
 anchors_preset = 0
-offset_left = -52.0
-offset_top = 215.0
-offset_right = -12.0
-offset_bottom = 255.0
+offset_left = 288.0
+offset_top = 483.0
+offset_right = 328.0
+offset_bottom = 523.0
 
-[node name="slPopupTimer" type="Timer" parent="Control"]
+[node name="slPopupTimer" type="Timer" parent="FertCalc"]
 one_shot = true
 
-[node name="maxFertSpinBox" type="SpinBox" parent="."]
+[node name="maxFertSpinBox" type="SpinBox" parent="FertCalc"]
 layout_mode = 0
 offset_left = 136.0
 offset_top = 438.0
@@ -214,13 +214,13 @@ max_value = 10000.0
 value = 120.0
 rounded = true
 
-[connection signal="item_selected" from="Control/TypeMenu" to="." method="_on_type_menu_item_selected"]
-[connection signal="item_selected" from="Control/SeedMenu" to="." method="_on_seed_menu_item_selected"]
-[connection signal="item_selected" from="Control/seedNameList" to="." method="_on_current_seeds_item_selected"]
-[connection signal="item_selected" from="Control/seedAmountList" to="." method="_on_seed_ammount_item_selected"]
-[connection signal="toggled" from="Control/ResetSafety" to="." method="_on_reset_safety_toggled"]
-[connection signal="button_up" from="Control/ResetButton" to="." method="_on_reset_button_button_up"]
-[connection signal="text_submitted" from="Control/LoadLine" to="." method="_on_load_line_text_submitted"]
-[connection signal="item_selected" from="Control/SaveLoadList" to="." method="_on_save_load_list_item_selected"]
-[connection signal="timeout" from="Control/slPopupTimer" to="." method="_on_sl_popup_timer_timeout"]
-[connection signal="value_changed" from="maxFertSpinBox" to="." method="_on_max_fert_spin_box_value_changed"]
+[connection signal="item_selected" from="FertCalc/TypeMenu" to="FertCalc" method="_on_type_menu_item_selected"]
+[connection signal="item_selected" from="FertCalc/SeedMenu" to="FertCalc" method="_on_seed_menu_item_selected"]
+[connection signal="item_selected" from="FertCalc/seedNameList" to="FertCalc" method="_on_current_seeds_item_selected"]
+[connection signal="item_selected" from="FertCalc/seedAmountList" to="FertCalc" method="_on_seed_ammount_item_selected"]
+[connection signal="toggled" from="FertCalc/ResetSafety" to="FertCalc" method="_on_reset_safety_toggled"]
+[connection signal="button_up" from="FertCalc/ResetButton" to="FertCalc" method="_on_reset_button_button_up"]
+[connection signal="text_submitted" from="FertCalc/LoadLine" to="FertCalc" method="_on_load_line_text_submitted"]
+[connection signal="item_selected" from="FertCalc/SaveLoadList" to="FertCalc" method="_on_save_load_list_item_selected"]
+[connection signal="timeout" from="FertCalc/slPopupTimer" to="FertCalc" method="_on_sl_popup_timer_timeout"]
+[connection signal="value_changed" from="FertCalc/maxFertSpinBox" to="FertCalc" method="_on_max_fert_spin_box_value_changed"]
