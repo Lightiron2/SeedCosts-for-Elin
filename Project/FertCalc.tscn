@@ -210,7 +210,7 @@ offset_left = 136.0
 offset_top = 438.0
 offset_right = 222.563
 offset_bottom = 469.0
-max_value = 10000.0
+max_value = 100000.0
 value = 120.0
 rounded = true
 
