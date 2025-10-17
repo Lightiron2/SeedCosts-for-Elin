@@ -65,6 +65,9 @@ var currentSeeds: Array = []
 var amount: float = 0.0
 var seedCheckerIndex: int = -1
 
+const sLPopTime: float = 2.0
+const loadCheckFail: Array = [false,-1.0]
+
 var maxFertility: float = 120.0:
 	set(newCost):
 		maxFertility = newCost
@@ -102,6 +105,10 @@ func _ready() -> void:
 	if versionLabel:
 		versionLabel.text = versionName
 	updateFertilityLabels()
+	var vas = [["Version"],[1,2,2,1,2,1]]
+	print(vas.size())
+	print(vas[1].size())
+	print(vas[0])
 
 
 func _on_type_menu_item_selected(index: int) -> void:
@@ -379,6 +386,56 @@ func _on_reset_button_button_up() -> void:
 func _on_max_fert_spin_box_value_changed(value: float) -> void:
 	maxFertility = value
 
+func checkLoadInfo(loadString: String) -> Array:
+	var vas = JSON.new()
+	var error = vas.parse(loadString)
+	var vit: Array[float]
+	var i: int = 0
+	if error != 0:
+		loadLine.clear()
+		slPopupFunc("Not Json Parsable.", sLPopTime)
+		return loadCheckFail
+	var tA = JSON.parse_string(loadString)
+	if tA is not Array:
+		loadLine.clear()
+		slPopupFunc("Wrong Format, not an array.", sLPopTime)
+		return loadCheckFail
+	var tas = tA.size()
+	if tas == 0:
+		loadLine.clear()
+		slPopupFunc("Empty Load Paste.", sLPopTime)
+		return loadCheckFail
+	if tas != 2:
+		loadLine.clear()
+		slPopupFunc("Load info does not contain 2 items, e.g [[version number e.g 1.0][seeds info]].", 10.0)
+		return loadCheckFail
+	if tas == 2:
+		if tA[0] is not Array:
+			slPopupFunc("Wrong Format, item 1 is not an array.", sLPopTime)
+			return loadCheckFail
+		if tA[0][0] is not float:
+			slPopupFunc("Version number is not a float, e.g 1.5", sLPopTime)
+			return loadCheckFail
+		if tA[0][0] < 1.0:
+			slPopupFunc("Version Number is lower than 1.0", sLPopTime)
+			return loadCheckFail
+		if tA[1] is not Array:
+			slPopupFunc("Wrong Format, item 2 is not an array.", sLPopTime)
+			return loadCheckFail
+	if tA[1].size() % 3 != 0:
+		loadLine.clear()
+		slPopupFunc("Wrong amount of items, not divisable by 3.", sLPopTime)
+		return loadCheckFail
+	for item in tA[1]:
+		if item is not float:
+			loadLine.clear()
+			slPopupFunc("One or more items are not float numbers. e.g 1.0, 1.1, 2.5", sLPopTime)
+			return loadCheckFail
+		if item < 0.0:
+			loadLine.clear()
+			slPopupFunc("One of the values is negative.",sLPopTime)
+	return [true,tA[0][0]]
+
 func loadStats(loadString: String):
 	var vas = JSON.new()
 	var error = vas.parse(loadString)
@@ -386,26 +443,26 @@ func loadStats(loadString: String):
 	var i: int = 0
 	if error != 0:
 		loadLine.clear()
-		slPopupFunc("Not Json Parsable.", 1.5)
+		slPopupFunc("Not Json Parsable.", sLPopTime)
 		return
 	var tA = JSON.parse_string(loadString)
 	if tA is not Array:
 		loadLine.clear()
-		slPopupFunc("Wrong Format, not an array.", 1.5)
+		slPopupFunc("Wrong Format, not an array.", sLPopTime)
 		return
 	var tas = tA.size()
 	if tas % 3 != 0:
 		loadLine.clear()
-		slPopupFunc("Wrong amount of items, not divisable by 3.", 1.5)
+		slPopupFunc("Wrong amount of items, not divisable by 3.", sLPopTime)
 		return
 	for item in tA:
 		if item is not float:
 			loadLine.clear()
-			slPopupFunc("One or more items are not float numbers. e.g 1.0, 1.1, 2.5", 1.5)
+			slPopupFunc("One or more items are not float numbers. e.g 1.0, 1.1, 2.5", sLPopTime)
 			return
 		if item < 0.0:
 			loadLine.clear()
-			slPopupFunc("One of the values is negative.",1.5)
+			slPopupFunc("One of the values is negative.",sLPopTime)
 	currentSeeds.clear()
 	testDic.clear()
 	seedNameList.clear()
@@ -448,16 +505,17 @@ func loadStats(loadString: String):
 		currentIteration += 1
 	calculateCost()
 	closeLoadWin()
-	slPopupFunc("Loaded", 1.5)
+	slPopupFunc("Loaded", sLPopTime)
 
 func saveStats():
 	var si = currentSeeds.size()
 	if si <= 0:
 		slPopupFunc("Nothing to save.", 1.5)
 		return
-	var saveInfo: Array
+	var saveInfo: Array = [[],[]]
 	var iterationNumber: int = 0
 	var maxIterations: int = currentSeeds.size()
+	saveInfo[0].append(version)
 	while iterationNumber < maxIterations:
 		var itType: String = currentSeeds[iterationNumber]["Type"]
 		var itSeed: String = currentSeeds[iterationNumber]["Seed"]
@@ -467,17 +525,17 @@ func saveStats():
 			return
 		if sdNum < 0:
 			return
-		saveInfo.append(tpNum)
-		saveInfo.append(sdNum)
-		saveInfo.append(currentSeeds[iterationNumber]["Amount"])
+		saveInfo[1].append(tpNum)
+		saveInfo[1].append(sdNum)
+		saveInfo[1].append(currentSeeds[iterationNumber]["Amount"])
 		iterationNumber += 1
 	var infoString: String = str(saveInfo)
-	if saveInfo.size() > 0:
+	if saveInfo[1].size() > 0:
 		DisplayServer.clipboard_set(infoString)
 		saveLoadList.release_focus()
-		slPopupFunc("Copied to ClipBoard", 1.5)
+		slPopupFunc("Copied to ClipBoard", sLPopTime)
 	else:
-		slPopupFunc("Could Not Successfully save info.", 1.5)
+		slPopupFunc("Could Not Successfully save info.", sLPopTime)
 
 func _on_save_load_list_item_selected(index: int) -> void:
 	removeOldInputBox()
@@ -498,6 +556,11 @@ func _on_save_load_list_item_selected(index: int) -> void:
 func _on_load_line_text_submitted(load_text: String) -> void:
 	removeOldInputBox()
 	if load_text:
+		var a: Array = checkLoadInfo(load_text)
+		if a == loadCheckFail:
+			loadLine.clear()
+			return
+		
 		loadStats(load_text)
 
 func slPopupFunc(text: String,time: float):
