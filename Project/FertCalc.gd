@@ -5,14 +5,14 @@ extends Control
 #labels and setting for fertility
 #ui work
 
-#int instead of array copy
+##sunflower seed costs.
 
 var versionName: String = "Version: Rewrite 1.0"
 var version: float = 1.0
 @export var versionLabel: Label
 
 const Fiber: Dictionary = {"Cotton" = 2.0}
-const Flowers: Dictionary = {"Normal Flower" = 1.0,"Blue Flower" = 1.0,"White Flower" = 1.0,
+const Flowers: Dictionary = {"Normal Flower" = 1.0,"Blue Flower" = 1.0,"Tulip" = 1.4,"White Flower" = 1.0,
 "Yellow Flower" = 1.0}
 const Fruit: Dictionary = {"Apple" = 3.0,"Banana" = 2.0,"Berry" = 1.0,"Cactus" = 3.0,"Grape" = 5.0,
 "Orange" = 3.0,"Palulu" = 2.0,"Pear" = 3.0,"Rainbow" = 8.0}
@@ -27,7 +27,7 @@ const Straw: Dictionary = {"Rice" = 3.0,"Wheat" = 3.0}
 const Trees: Dictionary = {"Birch" = 0.5,"Cedar" = 0.5,"Cherry" = 0.5,"Christmas" = 0.5,"Coral" = 7.0,
 "Feywood" = 10.0,"Fir" = 0.5,"Mushroom Tree" = 0.5,"Mahogany" = 0.5,"Oak" = 0.5,"Pine" = 0.5,"Rosewood" = 0.5,}
 const Vegetable: Dictionary = {"Bamboo" = 1.0,"Cabbage" = 4.0,"Cabocchi" = 4.0,"Carrot" = 3.0,
-"Corn" = 4.0,"Imo" = 3.0,"Radish" = 4.0,"SeaweedDeep" = 4.0,"Tomato" = 3.0,}
+"Corn" = 4.0,"Imo" = 3.0,"Radish" = 4.0,"Red Pepper" = 6.0,"SeaweedDeep" = 4.0,"Tomato" = 3.0,}
 
 
 var addingFromSeedMenu: bool = false
@@ -41,12 +41,12 @@ var swapOriginArray: Array = []
 
 var resetAble:bool = false
 
-const seedNameArray: Array[String] = ["Cotton", "Normal Flower", "Blue Flower", "White Flower",
- "Yellow Flower", "Apple", "Banana", "Berry", "Cactus", "Grape", "Orange", "Palulu", "Pear", "Rainbow",
- "Weed", "Cattail","Blue Herb","Green Herb", "Purple Herb","Red Herb", "Tobacc", "Mushroom", "Api",
+const seedNameArray: Array[String] = ["Cotton", "Normal Flower", "Blue Flower", "Tulip",
+ "White Flower","Yellow Flower", "Apple", "Banana", "Berry", "Cactus", "Grape", "Orange", "Palulu", "Pear",
+ "Rainbow", "Weed", "Cattail","Blue Herb","Green Herb", "Purple Herb","Red Herb", "Tobacc", "Mushroom", "Api",
  "Coffee", "Crim", "Rafflesia", "Fern", "Pasture", "Silver","Rice", "Wheat", "Birch", "Cedar", "Cherry",
 "Christmas", "Coral", "Feywood", "Fir", "Mushroom Tree","Mahogany", "Oak", "Pine","Rosewood","Bamboo",
-"Cabbage","Cabocchi","Carrot","Corn","Imo","Radish","SeaweedDeep","Tomato"]
+"Cabbage","Cabocchi","Carrot","Corn","Imo","Radish","Red Pepper","SeaweedDeep","Tomato"]
 
 const typeNameArray: Array[String] = ["Fiber","Flowers","Fruit","Grass","Herb","Mushroom","Nuts","Ornamental",
 	"Pasture","Straw","Trees","Vegetable",]
@@ -66,7 +66,6 @@ var amount: float = 0.0
 var seedCheckerIndex: int = -1
 
 const sLPopTime: float = 2.0
-const loadCheckFail: Array = [false,-1.0]
 
 var maxFertility: float = 120.0:
 	set(newCost):
@@ -386,94 +385,81 @@ func _on_reset_button_button_up() -> void:
 func _on_max_fert_spin_box_value_changed(value: float) -> void:
 	maxFertility = value
 
-func checkLoadInfo(loadString: String) -> Array:
+func checkLoadInfo(loadString: String) -> bool:
 	var vas = JSON.new()
 	var error = vas.parse(loadString)
-	var vit: Array[float]
-	var i: int = 0
 	if error != 0:
 		loadLine.clear()
 		slPopupFunc("Not Json Parsable.", sLPopTime)
-		return loadCheckFail
+		return false
 	var tA = JSON.parse_string(loadString)
 	if tA is not Array:
 		loadLine.clear()
 		slPopupFunc("Wrong Format, not an array.", sLPopTime)
-		return loadCheckFail
+		return false
 	var tas = tA.size()
 	if tas == 0:
 		loadLine.clear()
 		slPopupFunc("Empty Load Paste.", sLPopTime)
-		return loadCheckFail
+		return false
 	if tas != 2:
 		loadLine.clear()
 		slPopupFunc("Load info does not contain 2 items, e.g [[version number e.g 1.0][seeds info]].", 10.0)
-		return loadCheckFail
-	if tas == 2:
-		if tA[0] is not Array:
-			slPopupFunc("Wrong Format, item 1 is not an array.", sLPopTime)
-			return loadCheckFail
-		if tA[0][0] is not float:
-			slPopupFunc("Version number is not a float, e.g 1.5", sLPopTime)
-			return loadCheckFail
-		if tA[0][0] < 1.0:
-			slPopupFunc("Version Number is lower than 1.0", sLPopTime)
-			return loadCheckFail
-		if tA[1] is not Array:
-			slPopupFunc("Wrong Format, item 2 is not an array.", sLPopTime)
-			return loadCheckFail
+		return false
+	if tA[0] is not Array:
+		loadLine.clear()
+		slPopupFunc("Wrong Format, item 1 is not an array.", sLPopTime)
+		return false
+	if tA[1] is not Array:
+		loadLine.clear()
+		slPopupFunc("Wrong Format, item 2 is not an array.", sLPopTime)
+		return false
+	if tA[0].size() != 1:
+		loadLine.clear()
+		slPopupFunc("Version Array has more or fewer items than 1.", sLPopTime)
+		return false
+	if tA[1].size() < 3:
+		loadLine.clear()
+		slPopupFunc("Seed Array items less than 3.", sLPopTime)
+		return false
+	if tA[0][0] is not float:
+		loadLine.clear()
+		slPopupFunc("Version number is not a float, e.g 1.5", sLPopTime)
+		return false
+	if tA[0][0] < 1.0:
+		loadLine.clear()
+		slPopupFunc("Version Number is lower than 1.0", sLPopTime)
+		return false
 	if tA[1].size() % 3 != 0:
 		loadLine.clear()
 		slPopupFunc("Wrong amount of items, not divisable by 3.", sLPopTime)
-		return loadCheckFail
+		return false
 	for item in tA[1]:
 		if item is not float:
 			loadLine.clear()
-			slPopupFunc("One or more items are not float numbers. e.g 1.0, 1.1, 2.5", sLPopTime)
-			return loadCheckFail
+			slPopupFunc("One or more items in array 2, are not float numbers. e.g 1.0, 1.1, 2.5", sLPopTime)
+			return false
 		if item < 0.0:
 			loadLine.clear()
-			slPopupFunc("One of the values is negative.",sLPopTime)
-	return [true,tA[0][0]]
+			slPopupFunc("One of the values in array 2 is negative.",sLPopTime)
+	return true
 
 func loadStats(loadString: String):
-	var vas = JSON.new()
-	var error = vas.parse(loadString)
 	var vit: Array[float]
 	var i: int = 0
-	if error != 0:
-		loadLine.clear()
-		slPopupFunc("Not Json Parsable.", sLPopTime)
-		return
 	var tA = JSON.parse_string(loadString)
-	if tA is not Array:
-		loadLine.clear()
-		slPopupFunc("Wrong Format, not an array.", sLPopTime)
-		return
-	var tas = tA.size()
-	if tas % 3 != 0:
-		loadLine.clear()
-		slPopupFunc("Wrong amount of items, not divisable by 3.", sLPopTime)
-		return
-	for item in tA:
-		if item is not float:
-			loadLine.clear()
-			slPopupFunc("One or more items are not float numbers. e.g 1.0, 1.1, 2.5", sLPopTime)
-			return
-		if item < 0.0:
-			loadLine.clear()
-			slPopupFunc("One of the values is negative.",sLPopTime)
+	var tas = tA[1].size()
 	currentSeeds.clear()
 	testDic.clear()
 	seedNameList.clear()
 	seedAmountList.clear()
 	while i < tas:
-		vit.append(clampf(tA[i],1.0,10000.0))
+		vit.append(clampf(tA[1][i],1.0,10000.0))
 		i += 1
 	var tempTypeId: int = 0
 	var tempNameId: int = 1
 	var tempAmountId: int = 2
-	var iterations: int = tas / 3
+	var iterations: int = tas[1] / 3
 	var currentIteration: int = 0
 	var tNAS = typeNameArray.size() - 1
 	var sNAS = seedNameArray.size() - 1
@@ -556,8 +542,8 @@ func _on_save_load_list_item_selected(index: int) -> void:
 func _on_load_line_text_submitted(load_text: String) -> void:
 	removeOldInputBox()
 	if load_text:
-		var a: Array = checkLoadInfo(load_text)
-		if a == loadCheckFail:
+		var a: bool = checkLoadInfo(load_text)
+		if a == false:
 			loadLine.clear()
 			return
 		
