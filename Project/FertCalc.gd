@@ -6,9 +6,13 @@ extends Control
 #ui work
 
 
-var versionName: String = "Version: Rewrite 1.0"
-var version: float = 1.0
+const versionName: String = "Version: Rewrite 1.0"
+const version: float = 1.0
 @export var versionLabel: Label
+
+const typeNameVersion: float = 1.0
+const seedNameVersion: float = 1.0
+
 
 const Fiber: Dictionary = {"Cotton" = 2.0}
 const Flowers: Dictionary = {"Normal Flower" = 1.0,"Blue Flower" = 1.0,"Sunflower" = 1.2,"Tulip" = 1.4,
@@ -443,8 +447,7 @@ func checkLoadInfo(loadString: String) -> bool:
 		if item < 0.0:
 			loadLine.clear()
 			slPopupFunc("One of the values in array 2 is negative.",sLPopTime)
-	var classCheck: seedCostsC = seedCostsC.new()
-	var chkbool = classCheck.chkDic(tA[0][0])
+	var chkbool = seedClass.chkDic(tA[0][0])
 	if !chkbool:
 		loadLine.clear()
 		slPopupFunc("Version Number is not valid.",sLPopTime)
