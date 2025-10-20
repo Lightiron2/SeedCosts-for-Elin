@@ -5,15 +5,14 @@ extends Control
 #labels and setting for fertility
 #ui work
 
-##sunflower seed costs.
 
 var versionName: String = "Version: Rewrite 1.0"
 var version: float = 1.0
 @export var versionLabel: Label
 
 const Fiber: Dictionary = {"Cotton" = 2.0}
-const Flowers: Dictionary = {"Normal Flower" = 1.0,"Blue Flower" = 1.0,"Tulip" = 1.4,"White Flower" = 1.0,
-"Yellow Flower" = 1.0}
+const Flowers: Dictionary = {"Normal Flower" = 1.0,"Blue Flower" = 1.0,"Sunflower" = 1.2,"Tulip" = 1.4,
+"White Flower" = 1.0,"Yellow Flower" = 1.0}
 const Fruit: Dictionary = {"Apple" = 3.0,"Banana" = 2.0,"Berry" = 1.0,"Cactus" = 3.0,"Grape" = 5.0,
 "Orange" = 3.0,"Palulu" = 2.0,"Pear" = 3.0,"Rainbow" = 8.0}
 const Grass: Dictionary = {"Weed" = 1.0,"Cattail" = 1.0}
@@ -41,7 +40,7 @@ var swapOriginArray: Array = []
 
 var resetAble:bool = false
 
-const seedNameArray: Array[String] = ["Cotton", "Normal Flower", "Blue Flower", "Tulip",
+const seedNameArray: Array[String] = ["Cotton", "Normal Flower", "Blue Flower", "Sunflower", "Tulip",
  "White Flower","Yellow Flower", "Apple", "Banana", "Berry", "Cactus", "Grape", "Orange", "Palulu", "Pear",
  "Rainbow", "Weed", "Cattail","Blue Herb","Green Herb", "Purple Herb","Red Herb", "Tobacc", "Mushroom", "Api",
  "Coffee", "Crim", "Rafflesia", "Fern", "Pasture", "Silver","Rice", "Wheat", "Birch", "Cedar", "Cherry",
@@ -96,7 +95,9 @@ var fertilityCost: float = 0.0:
 var inputBox: SpinBox = null
 var slPopup: Label = null
 
+var seedClass: seedCostsC
 func _ready() -> void:
+	seedClass = seedCostsC.new()
 	closeLoadWin()
 	typeMenu.clear()
 	for key in typeNameArray:
@@ -442,13 +443,20 @@ func checkLoadInfo(loadString: String) -> bool:
 		if item < 0.0:
 			loadLine.clear()
 			slPopupFunc("One of the values in array 2 is negative.",sLPopTime)
+	var classCheck: seedCostsC = seedCostsC.new()
+	var chkbool = classCheck.chkDic(tA[0][0])
+	if !chkbool:
+		loadLine.clear()
+		slPopupFunc("Version Number is not valid.",sLPopTime)
 	return true
 
 func loadStats(loadString: String):
 	var vit: Array[float]
 	var i: int = 0
-	var tA = JSON.parse_string(loadString)
+	var tA: Array = JSON.parse_string(loadString)
 	var tas = tA[1].size()
+	var versionName: float = tA[0][0]
+	
 	currentSeeds.clear()
 	testDic.clear()
 	seedNameList.clear()
@@ -459,7 +467,7 @@ func loadStats(loadString: String):
 	var tempTypeId: int = 0
 	var tempNameId: int = 1
 	var tempAmountId: int = 2
-	var iterations: int = tas[1] / 3
+	var iterations: int = tas / 3
 	var currentIteration: int = 0
 	var tNAS = typeNameArray.size() - 1
 	var sNAS = seedNameArray.size() - 1
@@ -541,6 +549,8 @@ func _on_save_load_list_item_selected(index: int) -> void:
 
 func _on_load_line_text_submitted(load_text: String) -> void:
 	removeOldInputBox()
+	if !seedClass:
+		seedClass = seedCostsC.new()
 	if load_text:
 		var a: bool = checkLoadInfo(load_text)
 		if a == false:
