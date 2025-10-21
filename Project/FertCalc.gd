@@ -4,7 +4,7 @@ extends Control
 #ui work
 
 
-const versionName: String = "Version: Rewrite 1.0"
+const versionName: String = "Version: 1.0"
 const version: float = 1.0
 @export var versionLabel: Label
 
@@ -98,8 +98,16 @@ var inputBox: SpinBox = null
 var slPopup: Label = null
 
 var seedClass: seedCostsC
+
+const save_path = "user://my_save_data.txt"
 func _ready() -> void:
 	seedClass = seedCostsC.new()
+	if FileAccess.file_exists(save_path):
+		var a = FileAccess.open(save_path,FileAccess.READ)
+		var b = a.get_var(false)
+		if checkLoadInfo(b):
+			loadStats(b)
+		a.close()
 	closeLoadWin()
 	typeMenu.clear()
 	for key in typeNameArray:
@@ -303,13 +311,14 @@ func numberBox(value: float):
 				calculateCost()
 				return
 	if value == 0.0:
-		if checkIfEntryExists():
+		if editingValue:
 			removeFromDicAndArray(seedCheckerIndex)
 			editingValue = false
 			calculateCost()
 			updateItemLists(seedCheckerIndex)
 			removeOldInputBox()
 			deselectAll()
+			return
 
 func updateFertilityLabels():
 	var newFertDif: float = maxFertility - fertilityCost
@@ -538,6 +547,9 @@ func saveStats() -> void:
 		DisplayServer.clipboard_set(infoString)
 		saveLoadList.release_focus()
 		slPopupFunc("Copied to ClipBoard", sLPopTime)
+		var s = FileAccess.open(save_path,FileAccess.WRITE)
+		s.store_var(infoString,false)
+		s.close()
 		return
 	else:
 		slPopupFunc("Could Not Successfully save info.", sLPopTime)
