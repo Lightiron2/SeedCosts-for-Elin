@@ -1,8 +1,6 @@
 extends Control
 
-#reset button
 #save and load system
-#labels and setting for fertility
 #ui work
 
 
@@ -109,10 +107,6 @@ func _ready() -> void:
 	if versionLabel:
 		versionLabel.text = versionName
 	updateFertilityLabels()
-	var vas = [["Version"],[1,2,2,1,2,1]]
-	print(vas.size())
-	print(vas[1].size())
-	print(vas[0])
 
 
 func _on_type_menu_item_selected(index: int) -> void:
@@ -187,26 +181,26 @@ func checkIfEntryExists():
 				thisIndex += 1
 	return false
 
-func addToDicAndArray(type: String,seed: String,value: float,):
+func addToDicAndArray(type: String,seedN: String,value: float,):
 	if not testDic.has(type):
 		testDic[type] = {}
-	if not testDic[type].has(seed):
-		testDic[type][seed] = value
+	if not testDic[type].has(seedN):
+		testDic[type][seedN] = value
 	var thisIndex: int = 0
 	seedCheckerIndex = -1
 	for i in currentSeeds:
-		if i.has(type) && i.has(seed):
+		if i.has(type) && i.has(seedN):
 			print("already exists in array as index ",thisIndex)
 			seedCheckerIndex = thisIndex
 			return
 		thisIndex += 1
 	if not swapping:
-		currentSeeds.append({"Type" = type, "Seed" = seed,"Amount" = value})
+		currentSeeds.append({"Type" = type, "Seed" = seedN,"Amount" = value})
 		var seedsize = currentSeeds.size()
 		if seedsize > 0:
 			seedCheckerIndex = seedsize - 1
 		seedAmountList.add_item(str(value),null,true)
-		seedNameList.add_item(seed,null,true)
+		seedNameList.add_item(seedN,null,true)
 		addingFromSeedMenu = false
 		editingValue = true
 	return
@@ -405,11 +399,12 @@ func checkLoadInfo(loadString: String) -> bool:
 	var tas = tA.size()
 	if tas == 0:
 		loadLine.clear()
-		slPopupFunc("Empty Load Paste.", sLPopTime)
+		slPopupFunc("Empty Load Info.", sLPopTime)
 		return false
 	if tas != 2:
 		loadLine.clear()
-		slPopupFunc("Load info does not contain 2 items, e.g [[version number e.g 1.0][seeds info]].", 10.0)
+		slPopupFunc("Load info does not contain 2 arrays,
+		 e.g [[versions numbers e.g 1.0,1.0][seeds info]].", 10.0)
 		return false
 	if tA[0] is not Array:
 		loadLine.clear()
@@ -419,38 +414,49 @@ func checkLoadInfo(loadString: String) -> bool:
 		loadLine.clear()
 		slPopupFunc("Wrong Format, item 2 is not an array.", sLPopTime)
 		return false
-	if tA[0].size() != 1:
+	if tA[0].size() != 2:
 		loadLine.clear()
-		slPopupFunc("Version Array has more or fewer items than 1.", sLPopTime)
+		slPopupFunc("Version Array has more or fewer items than 2.", sLPopTime)
 		return false
 	if tA[1].size() < 3:
 		loadLine.clear()
 		slPopupFunc("Seed Array items less than 3.", sLPopTime)
 		return false
-	if tA[0][0] is not float:
+	if tA[0][0] is not float && tA[0][1] is not float:
 		loadLine.clear()
-		slPopupFunc("Version number is not a float, e.g 1.5", sLPopTime)
+		slPopupFunc("One or both version numbers is not a float, e.g 1.0", sLPopTime)
 		return false
-	if tA[0][0] < 1.0:
+	if tA[0][0] < 1.0 or tA[0][1] < 1.0:
 		loadLine.clear()
-		slPopupFunc("Version Number is lower than 1.0", sLPopTime)
+		slPopupFunc("One or both version numbers are incorrect.", sLPopTime)
 		return false
 	if tA[1].size() % 3 != 0:
 		loadLine.clear()
-		slPopupFunc("Wrong amount of items, not divisable by 3.", sLPopTime)
+		slPopupFunc("Wrong amount of items in second array, not divisable by 3.", sLPopTime)
 		return false
 	for item in tA[1]:
 		if item is not float:
 			loadLine.clear()
-			slPopupFunc("One or more items in array 2, are not float numbers. e.g 1.0, 1.1, 2.5", sLPopTime)
+			slPopupFunc("One or more items in array 2, are not float numbers. e.g 1.0, 2.0, 3.0", sLPopTime)
 			return false
 		if item < 0.0:
 			loadLine.clear()
 			slPopupFunc("One of the values in array 2 is negative.",sLPopTime)
-	var chkbool = seedClass.chkDic(tA[0][0])
-	if !chkbool:
+	var chkbool = seedClass.chkDics(tA[0][0],tA[0][1])
+	var nameBoolChk: bool = chkbool[0][0]
+	var typeBoolChk: bool = chkbool[0][1]
+	if !nameBoolChk:
+		if !typeBoolChk:
+			loadLine.clear()
+			slPopupFunc("Both version numbers are not valid.", sLPopTime)
+			return false
 		loadLine.clear()
-		slPopupFunc("Version Number is not valid.",sLPopTime)
+		slPopupFunc("First version number is not valid.",sLPopTime)
+		return false
+	if !typeBoolChk:
+		loadLine.clear()
+		slPopupFunc("Second version number is not valid.", sLPopTime)
+		return false
 	return true
 
 func loadStats(loadString: String):
@@ -458,8 +464,10 @@ func loadStats(loadString: String):
 	var i: int = 0
 	var tA: Array = JSON.parse_string(loadString)
 	var tas = tA[1].size()
-	var versionName: float = tA[0][0]
-	
+	var tmpSeedNA: Array = seedClass.getSeedN(tA[0][0])
+	var tmpTypeNA: Array = seedClass.getTypeN(tA[0][1])
+	var tNAS = tmpTypeNA.size() - 1
+	var sNAS = tmpSeedNA.size() - 1
 	currentSeeds.clear()
 	testDic.clear()
 	seedNameList.clear()
@@ -472,8 +480,6 @@ func loadStats(loadString: String):
 	var tempAmountId: int = 2
 	var iterations: int = tas / 3
 	var currentIteration: int = 0
-	var tNAS = typeNameArray.size() - 1
-	var sNAS = seedNameArray.size() - 1
 	#typeint, seedint, amountint, 0,1,2, += 3
 	var typeExist: bool = false
 	var seedExist: bool = false
@@ -485,10 +491,10 @@ func loadStats(loadString: String):
 		var tempSeed: String
 		if tempAmount >= 1.0:
 			if saveTypeInt <= tNAS:
-				tempType = typeNameArray[saveTypeInt]
+				tempType = tmpTypeNA[saveTypeInt]
 				typeExist = true
 			if saveNameInt <=sNAS:
-				tempSeed = seedNameArray[saveNameInt]
+				tempSeed = tmpSeedNA[saveNameInt]
 				seedExist = true
 			if typeExist && seedExist:
 				if staticTestDic.has(tempType):
@@ -504,7 +510,7 @@ func loadStats(loadString: String):
 	closeLoadWin()
 	slPopupFunc("Loaded", sLPopTime)
 
-func saveStats():
+func saveStats() -> void:
 	var si = currentSeeds.size()
 	if si <= 0:
 		slPopupFunc("Nothing to save.", 1.5)
@@ -512,7 +518,8 @@ func saveStats():
 	var saveInfo: Array = [[],[]]
 	var iterationNumber: int = 0
 	var maxIterations: int = currentSeeds.size()
-	saveInfo[0].append(version)
+	saveInfo[0].append(seedNameVersion)
+	saveInfo[0].append(typeNameVersion)
 	while iterationNumber < maxIterations:
 		var itType: String = currentSeeds[iterationNumber]["Type"]
 		var itSeed: String = currentSeeds[iterationNumber]["Seed"]
@@ -531,8 +538,10 @@ func saveStats():
 		DisplayServer.clipboard_set(infoString)
 		saveLoadList.release_focus()
 		slPopupFunc("Copied to ClipBoard", sLPopTime)
+		return
 	else:
 		slPopupFunc("Could Not Successfully save info.", sLPopTime)
+		return
 
 func _on_save_load_list_item_selected(index: int) -> void:
 	removeOldInputBox()
@@ -581,7 +590,7 @@ func _on_sl_popup_timer_timeout() -> void:
 	if slPopup:
 		slPopup.queue_free()
 
-func closeLoadWin():
+func closeLoadWin() -> void:
 	if loadLine.visible == true:
 		loadLine.clear()
 		loadLine.hide()
