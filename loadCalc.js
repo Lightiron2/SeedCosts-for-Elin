@@ -14,17 +14,17 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 	
 	button.addEventListener('click', function() {
-		if (window.innerWidth >= pixelBreakpoint)
+		//if (window.innerWidth >= pixelBreakpoint)
+		//{
+		if (!calcLoaded)
 		{
-			if (!calcLoaded)
-			{
-				loadCalc();
-			}
-		} 
-		else
-			{
-			alert(`Your screen is too small (${window.innerWidth}px). The calculator requires at least ${pixelBreakpoint}px.`);
-			}
+			loadCalc();
+		}
+		//} 
+		//else
+		//	{
+		//	alert(`Your screen is too small (${window.innerWidth}px). The calculator requires at least ${pixelBreakpoint}px.`);
+		//	}
 		});
 	//if (window.innerWidth >= pixelBreakpoint) {
     //loadCalc();
