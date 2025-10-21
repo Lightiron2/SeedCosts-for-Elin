@@ -1,33 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Elin Fertility Calculator</title>
+	<title>Elin Fertility Calculator</title>
 	<meta charset="utf-8">
-    <meta name="description" content="Elin Seed and Ferility calculator for planning your farm.">
+	<meta name="description" content="Elin Seed and Ferility calculator for planning your farm.">
 	<style>
-	body{
+	body
+	{
 		padding: 20px;
-}
+	}
 
-	.iframe-container {
+	.iframe-container 
+	{
 		display: flex;
 		justify-content: center;
 	}
 
-	.centered-iframe {
+	.centered-iframe 
+	{
 		border: 2px solid gray;
 	}
-  </style>
+	</style>
+	<script src="loadCalc.js"></script>
 </head>
 <body style="background-color: gray;">
 
-    <h1 style="text-align: center;">Elin Fertility Calculator</h1>
-    <p style="text-align: center;">To remove a seed, set its amount to 0 by clicking the corresponding number under Amounts.</p>
-    <p style="text-align: center;">To swap a seed, click the seed you want removed in the "Current Seeds" list and then the seed you want in the "Seeds" list.</p>
-    <p style="text-align: center;">To edit the amount of a seed in the "Current Seeds" list, click the number next to it in the "Amount" column.</p>
+	<h1 style="text-align: center;">Desktop Focused, done no testing for mobile nor other platforms.</h1>
+	<p style="text-align: center;">To remove a seed, set its amount to 0 by clicking the corresponding number under Amounts.</p>
+	<p style="text-align: center;">To swap a seed, click the seed you want removed in the "Current Seeds" list and then the seed you want in the "Seeds" list.</p>
+	<p style="text-align: center;">To edit the amount of a seed in the "Current Seeds" list, click the number next to it in the "Amount" column.</p>
 	
-	<div class="iframe-container">
+<!--	<div class="iframe-container">
 	<iframe class="centered-iframe" src="./html_export/FertCalc.html" width="720" height="576" frameborder="0"></iframe>
+	</div>	-->
+	
+	<div id="calc-container">
 	</div>
 
 </body>
