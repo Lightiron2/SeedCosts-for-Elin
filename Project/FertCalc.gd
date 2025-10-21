@@ -442,9 +442,9 @@ func checkLoadInfo(loadString: String) -> bool:
 		if item < 0.0:
 			loadLine.clear()
 			slPopupFunc("One of the values in array 2 is negative.",sLPopTime)
-	var chkbool = seedClass.chkDics(tA[0][0],tA[0][1])
-	var nameBoolChk: bool = chkbool[0][0]
-	var typeBoolChk: bool = chkbool[0][1]
+	var chkbool: Array = seedClass.chkDics(tA[0][0],tA[0][1])
+	var nameBoolChk: bool = chkbool[0]
+	var typeBoolChk: bool = chkbool[1]
 	if !nameBoolChk:
 		if !typeBoolChk:
 			loadLine.clear()
@@ -493,7 +493,7 @@ func loadStats(loadString: String):
 			if saveTypeInt <= tNAS:
 				tempType = tmpTypeNA[saveTypeInt]
 				typeExist = true
-			if saveNameInt <=sNAS:
+			if saveNameInt <= sNAS:
 				tempSeed = tmpSeedNA[saveNameInt]
 				seedExist = true
 			if typeExist && seedExist:

@@ -19,9 +19,9 @@ func getDics(seedF: float,typeF: float) -> Array:
 	return []
 
 func getSeedN(seedF: float) -> Array:
-	return [seedDics[str(seedF)]]
+	return seedDics[str(seedF)]
 func getTypeN(typeF: float) -> Array:
-	return [typeDics[str(typeF)]]
+	return typeDics[str(typeF)]
 
 func chkSeedDic(seedF: float) -> bool:
 	return seedDics.has(str(seedF))
