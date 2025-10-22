@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	const button = document.getElementById('load-calc-button');
 	const pixelBreakpoint = 1030;
 	let calcLoaded = false;
+	const autoLoadKey = 'loadedOnce';
 
 	function loadCalc() {
 	if (calcLoaded) return;
@@ -11,7 +12,15 @@ document.addEventListener('DOMContentLoaded', function() {
 	`;
 	calcLoaded = true;
 	console.log('Calc loaded.');
+	localStorage.setItem('loadedOnce', 'done');
 	}
+	
+	function chkAutoLoadCalc() {
+		if (localStorage.getItem(autoLoadKey)) 
+		{
+			loadCalc();
+		}
+	}	
 	
 	button.addEventListener('click', function() {
 		//if (window.innerWidth >= pixelBreakpoint)
@@ -26,6 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		//	alert(`Your screen is too small (${window.innerWidth}px). The calculator requires at least ${pixelBreakpoint}px.`);
 		//	}
 		});
+	chkAutoLoadCalc();
 	//if (window.innerWidth >= pixelBreakpoint) {
     //loadCalc();
 	//}
