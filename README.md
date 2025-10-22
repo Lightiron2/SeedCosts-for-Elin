@@ -1,4 +1,5 @@
 # SeedCost for Elin
+ Desktop focused, no testing done for mobile nor other platforms.
  Personal Elin fertility calculator. <br/>
  To remove a seed, set its amount to 0 by clicking the corresponding number under Amounts.<br/>
  To swap a seed, click the seed you want removed in the "Current Seeds" list and then the seed you want in the "Seeds" list.<br/>
