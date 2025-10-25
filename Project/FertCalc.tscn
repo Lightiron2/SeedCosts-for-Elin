@@ -16,7 +16,7 @@ offset_bottom = -288.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="FertCalc" type="Control" parent="." node_paths=PackedStringArray("versionLabel", "fertilityDifferenceLabel", "maximumFertilityLabel", "typeMenu", "seedsMenu", "seedNameList", "seedAmountList", "resetSafetyButton", "resetButton", "loadLine", "saveLoadList", "slPopupParent", "slPopupTimer")]
+[node name="FertCalc" type="Control" parent="." node_paths=PackedStringArray("versionLabel", "fertilityDifferenceLabel", "maximumFertilityLabel", "typeMenu", "seedsMenu", "seedNameList", "seedAmountList", "resetSafetyButton", "resetButton", "loadLine", "saveLoadList", "slPopupParent", "slPopupTimer", "maxFertSpinbox")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -39,6 +39,7 @@ loadLine = NodePath("LoadLine")
 saveLoadList = NodePath("SaveLoadList")
 slPopupParent = NodePath("slPopup")
 slPopupTimer = NodePath("slPopupTimer")
+maxFertSpinbox = NodePath("maxFertSpinBox")
 
 [node name="TypeMenu" type="ItemList" parent="FertCalc"]
 layout_mode = 0

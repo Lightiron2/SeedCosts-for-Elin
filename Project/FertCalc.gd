@@ -100,6 +100,9 @@ var slPopup: Label = null
 var seedClass: seedCostsC
 
 const save_path = "user://my_save_data.txt"
+
+@export var maxFertSpinbox: SpinBox
+var loadMaxFert: bool = false
 func _ready() -> void:
 	seedClass = seedCostsC.new()
 	if FileAccess.file_exists(save_path):
@@ -278,6 +281,13 @@ func calculateCost():
 	for types in testDic:
 		for keys in testDic[types]:
 			vals += testDic[types][keys] * staticTestDic[types][keys]
+	if loadMaxFert:
+		var mV: float = maxFertSpinbox.max_value
+		var cMinV: float = clampf(maxFertility,100.0,mV)
+		var roundingVal: float = clampf(vals + 1.0,cMinV,mV)
+		var newValue: float = int(roundingVal)
+		maxFertSpinbox.value = newValue
+		loadMaxFert = false
 	fertilityCost = vals
 
 func createInputBox(value: float,):
@@ -322,6 +332,7 @@ func numberBox(value: float):
 
 func updateFertilityLabels():
 	var newFertDif: float = maxFertility - fertilityCost
+	newFertDif = snappedf(newFertDif,0.1)
 	fertilityDifferenceLabel.text = str(newFertDif)
 	if newFertDif < 0:
 		fertilityDifferenceLabel.add_theme_color_override("font_color",Color(0.6, 0.0, 0.0))
@@ -515,6 +526,7 @@ func loadStats(loadString: String):
 		typeExist = false
 		seedExist = false
 		currentIteration += 1
+	loadMaxFert = true
 	calculateCost()
 	closeLoadWin()
 	slPopupFunc("Loaded", sLPopTime)
