@@ -1,9 +1,5 @@
 extends Control
 
-#save and load system
-#ui work
-
-
 const versionName: String = "Version: 1.0"
 const version: float = 1.0
 @export var versionLabel: Label
